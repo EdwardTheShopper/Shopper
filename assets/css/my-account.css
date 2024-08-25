@@ -1,0 +1,22 @@
+
+.my-account-page .woocommerce {
+	display: flex;
+	width: 100%;
+}
+
+.my-account-page .woocommerce .sidebar-right {
+	width: 100%;
+	margin: 0px 0px;
+}
+
+.my-account-page .woocommerce .woocommerce-orders-table__header-order-number, .my-account-page .woocommerce .woocommerce-orders-table__cell-order-number {
+	padding-top: 25px;
+}
+
+.my-account-page .woocommerce .mvx-order-vendor {
+	padding-right: 0px;
+}
+
+.my_account_orders .account-orders-table {
+	width: 100%;	
+}

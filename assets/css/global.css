@@ -1,0 +1,121 @@
+/* header */
+.site-header {
+	position: fixed; /* always floating on top when scrolling */
+	height: 56px;
+	width: 100%;
+	top: 0;
+}
+/* main menu navigation (only on desktop view with full screen) */
+.site-header .header-top {
+	font-family: "FontsFree-Bold", sans-serif !important;
+}
+
+/* main search bar - desktop view */
+.site-header .header-main {
+	border-bottom: 1px solid #e3e4e6;
+	padding: 1rem 0;
+}
+.dgwt-wcas-sf-wrapp:after { /* reposition of magnifying-glass icon */
+	right: 88%;
+}
+.dgwt-wcas-preloader.dgwt-wcas-close { /* reposition of close icon */
+	margin-left: 8% !important;
+}
+/* search results */
+.dgwt-wcas-suggestions-wrapp {
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	z-index: 999 !important; /* do not cover the accessibillity list */
+}
+
+/* main search bar - mobile view + mini-ipad view */
+@media only screen and (max-width: 768px) {
+	.site-header.mobile-nav-enable .header-search.active {
+		top: 56px; /* size of header */
+		bottom: 56px;
+		width: 100%;
+		height: auto;
+	}
+}
+
+/* main search bar - mobile view only */
+@media only screen and (max-width: 767px) {
+	.dgwt-wcas-sf-wrapp:after { /* reposition of magnifying-glass icon */
+		right: 85%;
+	}
+	/* search results */
+	.dgwt-wcas-suggestions-wrapp {
+		max-height: unset !important;
+		bottom: 3.5rem; /* do not cover the footer */
+	}
+}
+
+/* set site content right after the header */
+#main.site-primary { /* desktop view - full screen */
+	margin-top: 20vh;
+}
+@media only screen and (max-width: 1200px) { /* desktop view - small screen */
+	#main.site-primary {
+		margin-top: 15vh;
+	}		
+}
+@media only screen and (max-width: 768px) { /* mobile view + mini-ipad view */
+	#main.site-primary {
+		margin-top: 8vh;
+	}	
+}
+
+/* related to "assets/js/custom/mobile_search.js" */
+/* set as default after every reload (bring back scrolling after closing the search widget) */
+#main.site-primary {
+	position: relative;
+}
+
+/* minimize accessibility-icon for mobile view */
+@media only screen and (max-width: 767px) {
+	.pojo-a11y-toolbar-toggle a {
+		display: table-row-group !important;
+	}
+}
+
+/* make sure breadcrumb items always displayed horizontally */
+.woocommerce-breadcrumb ul {
+	display: flex;
+	flex-direction: row;
+}
+
+/* hide categories menu from main-search-bar and main-sidebar */
+.canvas-main .all-categories, .header-search .all-categories {
+	display: none !important;
+}
+
+/* hide header navigation menu (duplicated) */
+.header-nav.header-wrapper.hide-mobile {
+    display: none;
+}
+
+/* hide footer widgets */
+.site-footer .footer-widgets {
+    display: none;
+}
+
+/* main page - products on carousel */
+.products .slick-track {
+    display: flex !important;
+}
+.products .slick-slide {
+    height: inherit !important;
+}
+
+/* arrow icons (store-info and policies) */
+.arrow-toggle #arrow , .policy-arrow-toggle #arrow {
+	display: inline-block;
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+
+/* visible only on admin mode - do not cover the header */
+#wpadminbar {
+	position: absolute !important;
+}

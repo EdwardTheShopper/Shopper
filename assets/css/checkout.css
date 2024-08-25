@@ -1,0 +1,105 @@
+/* error messages */
+ul.woocommerce-error {
+    color: white;
+    background-color: var(--color-danger);
+}
+
+/* remove underline from required fields */
+.validate-required .required {
+	text-decoration: none;
+	color: var(--color-danger);
+}
+
+/* align all checkboxes */
+.pickup-option .checkbox, .accept-policies-checkbox .checkbox, .create-account .checkbox {
+	display: flex;
+	align-items: center;
+}
+#accept_policies,  #createaccount, #terms {
+	margin-left: 5px;
+}
+.woocommerce-terms-and-conditions-checkbox-text {
+	line-height: 2 !important;
+	padding-right: 0px !important;
+}
+
+/* pickup checkbox */
+#pickup_option_field {
+	font-weight: bold;
+}
+#pickup_option_field #pickup_option {
+	margin-left: 5px;
+}
+#pickup_option_field .checkbox .optional {
+	margin-right: 2px;
+	font-weight: normal;
+}
+
+/* delivery fields */
+#billing_city, #billing_address_1 {
+	height: 46px !important;
+}
+.form-row .select2 {
+	max-width: 100% !important;
+	width: 100% !important;	
+}
+@media only screen and (min-width: 767px) {
+	#billing_address_1_field, #billing_address_2_field {
+		max-width: 41% !important;
+		width: 41% !important;
+  	    padding: 10px 10px !important;
+	}
+	/* represents street-number */
+	#billing_postcode_field {
+		max-width: 18% !important;
+		padding: 10px 10px !important;
+	}
+	#billing_address_2_field {
+		margin-top: 2rem;
+	}
+}
+.mailchimp-newsletter, .woocommerce-shipping-fields #ship-to-different-address {
+	display: none;
+}
+
+/* delivery rules */
+#delivery_rules_field .woocommerce-input-wrapper {
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+}
+#delivery_rules_field .radio {
+	margin: 5px 7px;
+}
+#delivery_rules_field {
+	margin-bottom: 60px;
+}
+
+/* store policies */
+.woocommerce-additional-fields {
+	margin-top: 0px !important;
+}
+.store-policies br {
+	display: none;
+}
+/* hide duplicated error message */
+li[data-id="accept_policies"] {
+    display: none;
+}
+
+/* terms-and-conditions: hide the default asterisk and add a custom one right next to the text */
+.woocommerce-terms-and-conditions-wrapper .required {
+    visibility: hidden !important;
+}
+.woocommerce-terms-and-conditions-checkbox-text .required {
+	visibility: visible !important;
+}
+
+/* payment methods */
+.wc_payment_methods.payment_methods.methods > li {
+	align-items: center;
+	margin-top: 15px;
+}
+.wc_payment_methods.payment_methods.methods > li > label {
+	display: inline;
+}

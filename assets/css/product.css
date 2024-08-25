@@ -1,0 +1,59 @@
+/* similar products */
+@media only screen and (max-width: 767px) {
+	.products .product {
+		flex: 100%;
+	}
+}
+
+/* badge */
+.product-badges {
+    display: contents;
+    position: relative !important;
+    left: unset !important;
+    right: 1.25rem;
+    height: 100%;
+}
+span.badge {
+    max-height: 1.5rem;
+    margin-top: 0px !important;
+	font-size: .875rem !important;
+}
+span.badge.onsale {
+	margin-top: 3px !important;
+	margin-left: 3px;
+	z-index: 12;
+}
+@media screen and (min-width: 320px) and (max-width: 768px) {
+	span.badge.onsale {
+        position: relative;
+        top: unset !important;
+        bottom: unset;
+        left: unset !important;
+        right: unset !important;
+        display: inline-flex;
+    }
+}
+span.badge.organic, span.badge.recommend {
+    position: absolute;
+    top: -50px;
+    right: 15px;
+}
+
+/* hide multi-vendor and qna tabs */
+li#tab-title-singleproductmultivendor, li#tab-title-mvx_customer_qna {
+    display: none;
+}
+
+/* single product in list: all items */
+.products .content-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+/* single product in list: centralize image */
+.products .thumbnail-wrapper > a:not(.quick-view-button) {
+	text-align: center;
+}
+.product-wrapper.product-type-2, .products .content-wrapper {
+    height: 100%;
+}

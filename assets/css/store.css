@@ -1,0 +1,165 @@
+/* entire page content */
+.vendor-store .content-primary {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%
+}
+
+/* categories menu */
+.site-sidebar {
+    position: fixed;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+	width: 310px;
+    max-width: 310px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    margin-top: 0;
+    padding: 1.25rem 1.25rem 0;
+    background-color: var(--color-background);
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+    z-index: 10001;
+	/* initial values (changed dynamically via JS) */
+	opacity:0;
+	visibility: hidden;
+}
+.site-sidebar ul {
+	font-size: 1.4rem;
+	display: flex;
+	flex-direction: column;
+}
+/* add design to sub-menus */
+.site-sidebar li ul {
+	padding-right: 2rem;
+	padding-bottom: 8px;
+}
+#sub-item-category.without-children { /* make the title and the bullet icon stick together */
+	display: inline-flex;
+}
+#sub-item-category::before { /* add a bullet icon */
+	content: '\2022';
+	margin-left: 10px;
+}
+/* hide duplicated links */
+.site-sidebar li ul > a { /* select an <a> element that is a direct child of a sub-menu */
+	display: none;
+}
+
+.ps__rail-y { /* fix categories scroll bar */
+	left: 0px !important;
+}
+#masthead { /* place the header and footer behind categories overlay */
+    z-index: 999 !important; 
+}
+
+/* minimize margin above storefront image */
+.woocommerce-breadcrumb + .content-wrapper {
+    margin-top: 0 !important;
+}
+
+/* storefront image */
+.banner-img-cls {
+	height: unset !important;
+}
+.banner-img-cls .mvx-imgcls {
+	object-fit: contain;
+	width:auto;
+	height:auto;
+}
+@media screen and (min-width: 320px) and (max-width: 768px) {
+	.banner-img-cls {
+		max-height: 320px !important;
+		height: auto;
+	}
+}
+
+/* turn the store logo into a circle */
+.mvx-banner-below .mvx-profile-area img {
+    border-radius: 50%;
+}
+/* fix responsiveness of store logo */
+.vendor-store .mvx-banner-below .mvx-profile-area img {
+	max-width: unset !important;
+}
+
+/* align store title on mobile view */
+@media screen and (min-width: 320px) and (max-width: 768px) {
+    .mvx-theme01 .mvx-banner-below {
+		padding: 0 !important;
+	}
+	.mvx-theme01 .mvx-banner-below .mvx-heading {
+		margin: 0 !important;
+	}
+	.mvx-theme01 .mvx-banner-below .mvx-profile-area {
+		padding: 0 20px !important;
+	}
+}
+
+/* hide vendor rating (unused) */
+.mvx-theme01 .mvx-banner-below .mvx_vendor_rating {
+	display: none;
+}
+
+/* store info */
+.mvx-banner-wrap .description_data, .mvx-banner-wrap .description_data p {
+    text-align: right !important;
+}
+.mvx-contact-deatil { /* margin above description */
+	margin-bottom: 20px;
+}
+.mvx-contact-deatil .mvx-address:first-child { /* first item */
+	margin-right: 0px !important;
+}
+.mvx-theme01 .mvx-address { /* single item */
+	display: flex;
+	margin: 2px 0 2px 0 !important;
+}
+.mvx-contact-deatil .mvx-address span, .mvx-contact-deatil .mvx-address a { /* single item text */
+	padding-right: 0 !important;
+}
+.mvx-theme01 p.mvx-address i, .mvx-theme03 p.mvx-address i { /* single item icon */
+	display: inline-block;
+	margin: 0 0 0 7px !important;
+	background: #4481ff !important;
+}
+#toggle-header #store-info-icon { /* store info icon */
+	font-size: 1.25rem;
+    height: 1.25rem;
+    width: 1.25rem;
+    color: white;
+    text-align: center;
+    border-radius: 50%;
+    background: #4481ff !important;
+    margin: 0 0 0 7px !important;
+}
+#toggle-header {
+	display: flex;
+	align-items: center;
+}
+/* fix overlapping on mobile view */
+.mvx-banner-wrap #toggle-header {
+	position: relative;
+}
+
+/* keep showing add-to-cart button for products that are already in cart */
+.cart-with-quantity.product-in-cart a.button {
+    display: -webkit-box !important;
+}
+
+/* hide simple whatsapp button */
+#btn-getInTouch {
+	display: none;
+}
+/* lift up whatsapp widget */
+.whatsapp-live-widget {
+	margin-bottom: 2rem;
+	z-index: 99 !important; /* make sure is doesn't cover the search widget on moblie view */
+}
+
+/* hide message at the end of products list */
+.no-more-products {
+    display: none;
+}
