@@ -1,8 +1,9 @@
 /* handle opening and closing of sub-menus in categories menu */
 document.addEventListener('DOMContentLoaded', function() {
-    const toggles = document.querySelectorAll('.site-sidebar .toggle');
+    const toggles = document.querySelectorAll('.canvas-main .toggle');
     toggles.forEach(toggle => {
         toggle.addEventListener('click', function() {
+            console.log('yeyyeyeye');
             const submenu = this.nextElementSibling; // get the following submenu
             if(submenu) { // exists
                 if(submenu.style.display === 'none' || submenu.style.display === '') { // submenu is closed

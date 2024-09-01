@@ -21,6 +21,10 @@
 				</div><!-- close-canvas -->
 			</div><!-- canvas-header -->
 			<div class="canvas-main">
+			<?php $vendor_id = get_vendor_id(); 
+			echo $vendor_id;
+			do_action('display_vendor_categories', $vendor_id);
+			?>
 
 			<?php
 				// Check if the widget area is active

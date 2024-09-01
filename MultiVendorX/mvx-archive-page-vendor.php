@@ -123,6 +123,7 @@ $openning_hours = [
           <?php if (is_active_sidebar('shop-sidebar')) { ?>
           <?php dynamic_sidebar('shop-sidebar'); ?>
           <!-- custom Hook to get catgories by vendor -->
+           
 					<?php do_action('display_vendor_categories', get_vendor_id()); ?>
           <div id='insert_canvas_links_here'>
 					<?php } ?>

@@ -39,7 +39,7 @@ include_once('functions/marketing/send_prom_email.php');
 include_once('functions/marketing/store_sale_popup.php');
 
 include_once('functions/mvx/store_info.php');
-//include_once('functions/mvx/vendor-categories-tree.php');
+include_once('functions/mvx/vendor-categories-tree.php');
 //include_once('functions/mvx/all-categories-filter-search.php'); Duplicate issue with bacola parent in line 339 in functions
 
 include_once('functions/payments/payments_methods.php'); // replacing credit2000payment.php
