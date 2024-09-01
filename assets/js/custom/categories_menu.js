@@ -1,7 +1,6 @@
 /* handle opening and closing of sub-menus in categories menu */
 document.addEventListener('DOMContentLoaded', function() {
     const toggles = document.querySelectorAll('.site-sidebar .toggle');
-
     toggles.forEach(toggle => {
         toggle.addEventListener('click', function() {
             const submenu = this.nextElementSibling; // get the following submenu

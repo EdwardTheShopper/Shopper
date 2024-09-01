@@ -105,6 +105,7 @@ $openning_hours = [
 ?>
 	</div>
 		<div id="sidebar" class="col-12 col-md-3 col-lg-3 content-secondary site-sidebar">
+
 			<div class="site-scroll">
 				<div class="sidebar-inner">
 

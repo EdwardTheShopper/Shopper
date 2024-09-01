@@ -65,7 +65,7 @@
 }
 /* hide default burger menu (being replaced with this custom filters-menu) */
 body > .site-canvas {
-    display: none;
+    /* display: none; */
 }
 /* adjustments for the custom canvas links (at the bottom of the menu) */
 #insert_canvas_links_here .site-canvas { /* wrapper */

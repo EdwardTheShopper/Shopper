@@ -578,3 +578,41 @@ function unregister_klb_product_categories_widget() {
 
 }
 add_action('widgets_init', 'unregister_klb_product_categories_widget', 11);
+
+
+function my_custom_widget_area() {
+    register_sidebar( array(
+        'name'          => 'shopper custom widget',
+        'id'            => 'custom-widget-area',
+        'before_widget' => '<div class="widget-area custom-widget">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h3 class="widget-title">',
+        'after_title'   => '</h3>',
+    ) );
+}
+add_action( 'widgets_init', 'my_custom_widget_area' );
+
+
+/**
+ * By: Edward Ziadeh
+ * Date: Sep 1, 2024
+ * Jira Task: https://tngshopper.atlassian.net/browse/SS-496
+ * To override the bacola_canvas_menu we need to override bacola_main_header
+ */
+
+// In your child theme's functions.php
+
+// Use wp_loaded to ensure the action is removed after it's added
+add_action('wp_loaded', function() {
+    remove_action('bacola_main_header', 'bacola_canvas_menu', 10);
+});
+
+// Custom function in your child theme
+function bacola_child_canvas_menu() {
+    require_once get_template_directory() . '-child/includes/header/models/canvas-menu.php';
+    add_action('bacola_main_header', 'bacola_canvas_menu1', 10);
+}
+
+// Hook your custom function to the same action
+add_action('bacola_main_header', 'bacola_child_canvas_menu', 10);
+

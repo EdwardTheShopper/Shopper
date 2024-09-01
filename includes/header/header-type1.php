@@ -55,7 +55,8 @@
             <div class="column column-left">
                 <div class="header-buttons">
                     <div class="header-canvas button-item">
-                        <a href="#" class="filter-toggle">
+                        <!-- <a href="#" class="filter-toggle"> Sharon code -->
+                        <a href="#">
                             <i class="klbth-icon-menu-thin"></i>
                         </a>
                     </div>
