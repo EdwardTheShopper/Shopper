@@ -39,8 +39,100 @@ span.badge.organic, span.badge.recommend {
     right: 15px;
 }
 
-/* hide multi-vendor and qna tabs */
-li#tab-title-singleproductmultivendor, li#tab-title-mvx_customer_qna {
+/* set all gallery images horizontally */
+.woocommerce-product-gallery__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+.woocommerce-product-gallery__wrapper .woocommerce-product-gallery__image:first-child {
+    width: 100%;
+}
+
+/* product title */
+.single-wrapper .product-header {
+    border-top: 1px solid var(--color-border); 
+    border-bottom: unset !important;
+    padding-bottom: 0 !important;
+    padding-top: 1rem !important;
+    margin-bottom: 0 !important;
+}
+
+/* fix for ipad view - minimize space between title and price */
+@media screen and (min-width: 922px) and (max-width: 1024px) {
+    .single-wrapper .product-header {
+        margin-bottom: 20px !important;
+    }
+    .single-content .product .product-content .product-detail {
+        align-content: flex-start;
+    }
+}
+
+/* overriding bacola rule (unnecessary) */
+@media screen and (min-width: 64rem) {
+    .single-content .product .product-content .product-detail {
+        padding-right: 15px; /* instead of 1.875rem */
+    }
+}
+
+/* pickup and delivery info */
+#single_product_shipping_options { /* outer box */
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.25rem;
+    border: 1px solid var(--color-border-light);
+}
+#single_product_shipping_options i { /* icons */
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1.25rem;
+    font-size: 1.25rem;
+}
+#single_product_shipping_options i.klbth-icon-delivery { /* separator line */
+    border-top: 1px solid var(--color-border-light);
+}
+#single_product_shipping_options i span { /* inner text */
+    margin-right: 1rem;
+    font-size: 1rem;
+    font-weight: 650;
+}
+#delivery-element { /* wrapper */
+    cursor: pointer;
+}
+#delivery-element-info-icon { /* info icon */
+    margin: 0 7px 0 0 !important;
+    padding: unset !important;
+    width: 1.5rem !important;
+    height: 1.5rem;
+    color: white;
+    justify-content: center;
+    border-radius: 50%;
+	background: var(--color-secondary) !important; /* associate with Theme color palette */
+}
+#delivery-element-info-toggle {
+    padding: 0 1.25rem;
+    font-size: 1rem;
+    height: 0;
+    overflow: hidden;
+}
+
+/* hide default 'short-description' (being replaced with a custom collapsible panel) */
+.product-content .woocommerce-product-details__short-description {
+    display: none;
+}
+
+/* hide duplicated tabs navigator */
+.single-sticky-titles {
+    display: none !important;
+}
+
+/* titles in policies-tab */
+.woocommerce-Tabs-panel--policies .mvx_policies_heading {
+    font-size: 1.5rem;
+}
+
+/* hide separator line at the end of the page (this line is usful in store, cart and checkout pages) */
+.single-wrapper #separator-line {
     display: none;
 }
 
@@ -56,4 +148,20 @@ li#tab-title-singleproductmultivendor, li#tab-title-mvx_customer_qna {
 }
 .product-wrapper.product-type-2, .products .content-wrapper {
     height: 100%;
+}
+
+/* cover the default footer with the "add to cart" widget (only on mobile view) */
+@media only screen and (max-width: 1024px) {
+    .single .single-content .product-type-simple form.cart {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: 999;
+        background: #fff;
+        margin-bottom: 0;
+        padding: 15px; /* 3px 15px 7px; */
+        -webkit-box-shadow: 0 -2px 5px rgb(0 0 0 / 7%);
+        box-shadow: 0 -2px 5px rgb(0 0 0 / 7%);
+        justify-content: space-between;
+    }
 }

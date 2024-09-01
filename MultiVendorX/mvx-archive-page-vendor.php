@@ -1,4 +1,5 @@
 <?php
+
 defined('ABSPATH') || exit;
 
 get_header('shop');
@@ -81,6 +82,8 @@ $openning_hours = [
 					<div class="woocommerce-products-header__title page-title"><?php is_tax($mvx->taxonomy->taxonomy_name) ? woocommerce_page_title() : print(get_user_meta(mvx_find_shop_page_vendor(), '_vendor_page_title', true)); ?></div>
 				<?php endif; ?>
 				<?php
+
+
                 /**
                  * Hook: mvx_archive_description.
                  *
@@ -88,11 +91,6 @@ $openning_hours = [
                  do_action('mvx_archive_description');
         ?>
 			</header>
-
-
-
-
-
 
 			<?php
 
@@ -106,23 +104,27 @@ $openning_hours = [
 
 ?>
 	</div>
-		
 		<div id="sidebar" class="col-12 col-md-3 col-lg-3 content-secondary site-sidebar">
 			<div class="site-scroll">
 				<div class="sidebar-inner">
 
 					<div class="sidebar-mobile-header">
-						<h3 class="entry-title"><?php esc_html_e('               '/*'Filter Products'*/, 'bacola'); ?></h3>
-
+						<!-- <h3 class="entry-title"><?php # esc_html_e('               '/*'Filter Products'*/, 'bacola'); ?></h3> -->
+            <!-- <button id="show_products" type="primary">הצג מוצרים</button> -->
+            <a href="<?php echo get_vendor_slug($vendor_id); ?>">
+              <button id="reset_filters" type="primary">איפוס בחירה</button>
+            </a>
 						<div class="close-sidebar">
 							<i class="klbth-icon-x"></i>
 						</div>
 					</div>
 
-					<?php if (is_active_sidebar('shop-sidebar')) { ?>
-						<?php dynamic_sidebar('shop-sidebar'); ?>
+          <?php if (is_active_sidebar('shop-sidebar')) { ?>
+          <?php dynamic_sidebar('shop-sidebar'); ?>
+          <!-- custom Hook to get catgories by vendor -->
+					<?php do_action('display_vendor_categories', get_vendor_id()); ?>
+          <div id='insert_canvas_links_here'>
 					<?php } ?>
-
 				</div>
 			</div>
 		</div>
@@ -131,6 +133,7 @@ $openning_hours = [
 </div>
 
 <!-- Schema.org 221122 -->
+
 <script type="application/ld+json">
 {
   "@context": "http://schema.org",

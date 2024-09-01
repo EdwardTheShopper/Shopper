@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Author: Edward Ziadeh
@@ -116,7 +117,7 @@ function cors_settings_page() { // include the CORS settings page
  ************************/
 add_action('admin_init', 'other_options_page_settings');
 function other_options_page_settings() {
-	register_setting('other_options_group', 'baseUrl');
+    register_setting('other_options_group', 'baseUrl');
     register_setting('other_options_group', 'sellerAppUrl');
     register_setting('other_options_group', 'consumerKey');
     register_setting('other_options_group', 'consumerSecret');
@@ -127,13 +128,13 @@ function other_options_page_settings() {
         'other_options_section_callback', // Callback
         'other-settings'                  // Page
     );
-	add_settings_field(
+    add_settings_field(
         'baseUrl',                        // ID
         'Base Url (ends with /):',        // Title
         'base_url_callback',              // Callback
         'other-settings',                 // Page
         'other_options_section'           // Section
-    );
+    );    
     add_settings_field(
         'sellerAppUrl',                   // ID
         'SellerApp Url (ends with /):',   // Title

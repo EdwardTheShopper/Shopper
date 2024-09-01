@@ -30,8 +30,8 @@ do_action( 'woocommerce_before_account_navigation' );
 					<?php esc_html_e('תפריט','bacola'); ?>
 				</div><!-- account-toggle-menu -->
 
-				<nav class="woocommerce-MyAccount-navigation">
-					<ul>
+                <nav class="woocommerce-MyAccount-navigation">
+                    <ul>
                         <?php
                             $menu_items = wc_get_account_menu_items();
                             $items_to_remove = array( // those are the unique classes
@@ -63,7 +63,7 @@ do_action( 'woocommerce_before_account_navigation' );
                                 }
                             }
                         ?>
-					</ul>
-				</nav>
+                    </ul>
+                </nav>
 			</div>
 <?php do_action( 'woocommerce_after_account_navigation' ); ?>

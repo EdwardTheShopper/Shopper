@@ -5,19 +5,19 @@
     max-width: 100%
 }
 
-/* categories menu */
+/* filters menu */
 .site-sidebar {
     position: fixed;
     -webkit-box-flex: 0;
     -ms-flex: 0 0 100%;
     flex: 0 0 100%;
-	width: 310px;
-    max-width: 310px;
+	width: 380px;
+	max-width: 380px;
     top: 0;
     bottom: 0;
     right: 0;
     margin-top: 0;
-    padding: 1.25rem 1.25rem 0;
+    padding: 1.25rem;
     background-color: var(--color-background);
     -webkit-transform: translateX(100%);
     transform: translateX(100%);
@@ -26,33 +26,90 @@
 	opacity:0;
 	visibility: hidden;
 }
-.site-sidebar ul {
-	font-size: 1.4rem;
-	display: flex;
-	flex-direction: column;
+.site-sidebar .sidebar-mobile-header { /* make the header floating on top */
+	position: fixed;
+	padding: 20px;
+    z-index: 99;
+	width: 90%;
+	top: 0;
+	background: white;
+	font-size: 15px; /* inner buttons */
+	justify-items: flex-start;
 }
-/* add design to sub-menus */
-.site-sidebar li ul {
-	padding-right: 2rem;
-	padding-bottom: 8px;
+.site-sidebar .widget_product_search { /* create space for the sticky header */
+	margin-top: 80px;
 }
-#sub-item-category.without-children { /* make the title and the bullet icon stick together */
-	display: inline-flex;
+.site-sidebar .widget { /* adjust the rest of the content */
+	position: relative;
 }
-#sub-item-category::before { /* add a bullet icon */
-	content: '\2022';
-	margin-left: 10px;
+.site-sidebar .widget + .widget { /* add separator lines between different filters */
+	border-top: 1px solid var(--color-border);
+	padding-top: 1.75rem;
 }
-/* hide duplicated links */
-.site-sidebar li ul > a { /* select an <a> element that is a direct child of a sub-menu */
-	display: none;
+/* make the text bigger for: */
+.site-sidebar .widget_custom_product_categories label, /* categories' labels */
+.site-sidebar .widget_price_filter .price_label, /* price range */
+.site-sidebar .widget_price_filter .button, /* price submit button */
+.site-sidebar .widget_layered_nav a { /* labels of all other attributes */
+	font-size: 15px;
 }
-
-.ps__rail-y { /* fix categories scroll bar */
+.ps__rail-y { /* fix scroll bar */
 	left: 0px !important;
 }
-#masthead { /* place the header and footer behind categories overlay */
+#masthead { /* place the header and footer behind the overlay */
     z-index: 999 !important; 
+}
+/* close icon */
+.sidebar-mobile-header .close-sidebar {
+	cursor: pointer;
+}
+/* hide default burger menu (being replaced with this custom filters-menu) */
+body > .site-canvas {
+    display: none;
+}
+/* adjustments for the custom canvas links (at the bottom of the menu) */
+#insert_canvas_links_here .site-canvas { /* wrapper */
+	position: relative;
+	width: 100% !important;
+	right: 340px;
+}
+#insert_canvas_links_here .canvas-menu { /* list */
+	border-top: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--color-border);
+}
+#insert_canvas_links_here .canvas-menu a { /* single item (inner link) */
+	padding-right: 1.25rem !important;
+	margin-top: 5px !important;
+	margin-bottom: 5px !important;
+}
+@media screen and (max-width: 419px) { /* adjustment for very small screens */
+    .site-sidebar {
+        width: 100%;
+    }
+	#insert_canvas_links_here .site-canvas {
+		right: 320px;
+	}	
+}
+
+/* set full height through all menu elements */
+.site-sidebar .sidebar-inner,
+.site-sidebar .sidebar-inner .widget,
+.site-sidebar .sidebar-inner .widget .widget-body,
+.site-sidebar .sidebar-inner .widget .widget-body .site-scroll {
+	height: fit-content;
+	max-height: 100%;
+}
+
+/* search filters */
+.site-sidebar .widget_product_search button { /* hide submit-search button */
+	display: none;
+}
+.site-sidebar .widget_price_filter .price_label { /* change direction of price range */
+	display: inline-flex;
+    flex-direction: row-reverse;
+}
+.site-sidebar .widget_price_filter .price_label span { /* adjust margin */
+	margin: 0 4px;
 }
 
 /* minimize margin above storefront image */
@@ -123,30 +180,50 @@
 .mvx-theme01 p.mvx-address i, .mvx-theme03 p.mvx-address i { /* single item icon */
 	display: inline-block;
 	margin: 0 0 0 7px !important;
-	background: #4481ff !important;
+	background: var(--color-secondary) !important; /* associate with Theme color palette */
 }
 #toggle-header #store-info-icon { /* store info icon */
 	font-size: 1.25rem;
-    height: 1.25rem;
-    width: 1.25rem;
+    height: 1.5rem;
+    width: 1.5rem;
     color: white;
     text-align: center;
     border-radius: 50%;
-    background: #4481ff !important;
+	background: var(--color-secondary) !important; /* associate with Theme color palette */
     margin: 0 0 0 7px !important;
 }
-#toggle-header {
+#toggle-header { /* also applies for product, cart and checkout pages */
 	display: flex;
 	align-items: center;
+	margin-top: 1rem;
 }
+/* unset margin of store-info description - only on store page */
+.vendor-store #toggle-header {
+	margin-top: 0 !important;
+}
+
 /* fix overlapping on mobile view */
 .mvx-banner-wrap #toggle-header {
 	position: relative;
 }
 
+/* "order-by" and "products-per-page" arrows */
+.before-shop-loop .product-filter .select2 .select2-selection .select2-selection__arrow:after {
+    font-size: 1.25rem;
+}
+
 /* keep showing add-to-cart button for products that are already in cart */
 .cart-with-quantity.product-in-cart a.button {
     display: -webkit-box !important;
+}
+
+/* override the default color of add-to-cart button (associated with Theme color palette) */
+.product-type-2 a.button.button-primary {
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+.product-type-2 a.button.button-primary:hover {
+    background-color: var(--color-primary);
 }
 
 /* hide simple whatsapp button */
@@ -155,11 +232,39 @@
 }
 /* lift up whatsapp widget */
 .whatsapp-live-widget {
-	margin-bottom: 2rem;
-	z-index: 99 !important; /* make sure is doesn't cover the search widget on moblie view */
+	margin-bottom: 2.5rem;
+	z-index: 99 !important; /* make sure is doesn't cover the search widget */
 }
 
 /* hide message at the end of products list */
 .no-more-products {
     display: none;
 }
+
+
+
+
+
+
+
+/* TEMPORARY HIDDEN (related to manually set categories menu) */
+/* .site-sidebar ul {
+	font-size: 1.4rem;
+	display: flex;
+	flex-direction: column;
+}
+/* add design to sub-menus /
+.site-sidebar li ul {
+	padding-right: 2rem;
+	padding-bottom: 8px;
+}
+.site-sidebar .toggle { /* expand button /
+	margin-right: 10px;
+	border: unset;
+	background: transparent;
+	color: var(--color-text-lighter); /* same as text /
+}
+.site-sidebar a:hover {
+	color: var(--color-primary); /* associate with Theme color palette /
+} */
+/* END OF TEMPORARY HIDDEN */

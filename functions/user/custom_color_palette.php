@@ -96,7 +96,7 @@ function extract_colors_from_logo_handler($user) {
                                     .map(([color, count]) => {
                                         // calculate percentage of each color
                                         var percentage = ((count / totalColorsCount) * 100).toFixed(2);
-                                        return { color: color, percentage: percentage };
+                                        return { color, percentage };
                                     });
                                 resolve(sortedColorList); 
                             }
@@ -115,32 +115,41 @@ function extract_colors_from_logo_handler($user) {
 add_Action('wp_footer', 'apply_custom_theme_color_palette');
 function apply_custom_theme_color_palette() {
 
-    $vendor_id = null;
+    if(is_front_page()) // do not run on the main page
+        return;
 
-    if(strpos($_SERVER['REQUEST_URI'], '/store/') !== false) // the current page is associated with a specific store
-        $vendor_id = mvx_find_shop_page_vendor();
-    else {
-        // TODO: are those pages should be custom as well ? (checkout, cart, etc..)
-        // TODO: find another way to get the vendor_id
-        /* TEMP */ return;
-    }
+    $vendor_id = get_vendor_id();    
+    if(!$vendor_id) return;
 
     // get custom colors from ACF
     $primary_color = get_field('primary_color', 'user_' . $vendor_id);
     $secondary_color = get_field('secondary_color', 'user_' . $vendor_id);
-    $tertiary_color = get_field('tertiary_color', 'user_' . $vendor_id);
-    // TODO: find a use for tertiary_color or remove it entirely (from ACF as well)
 
-    // ensure that colors are set before outputting CSS
+    // ensure that ACF colors are set before outputting CSS
     if($primary_color || $secondary_color) {
         // override root variables
         echo '<style type="text/css">';
         echo ':root {';
         if($primary_color) {
             echo '--color-primary: ' . esc_attr($primary_color) . ';';
+
+            /* NOTE:
+                In order keep "--color-danger" variable as is (do not override it!)
+                the colors for the following elements were set separatly:
+            */
+            echo '
+                .woocommerce-mini-cart__buttons.buttons .checkout, 
+                .cart-collaterals a.checkout-button,
+                #order_review button#place_order {
+                    background-color: var(--color-primary) !important;
+                    border-color: var(--color-primary) !important;
+                }
+            ';
         }
         if($secondary_color) {
             echo '--color-secondary: ' . esc_attr($secondary_color) . ';';
+            echo '--color-rating: ' . esc_attr($secondary_color) . ';';
+            echo '--color-price: ' . esc_attr($secondary_color) . ';';
         }
         echo '}';
         echo '</style>';

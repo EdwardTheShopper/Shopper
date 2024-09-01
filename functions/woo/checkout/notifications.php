@@ -1,5 +1,5 @@
 <?php
-include 'functions/payments/payments_methods.php'; // in order to use 'get_vendor_id_from_cart()'
+//include 'functions/payments/payments_methods.php'; // in order to use 'get_vendor_id_from_cart()'
 
 /* get vendor_id from cart and re-write it to the cookie */
 add_action('wp_footer', 'redefine_vendor_id');
@@ -7,7 +7,7 @@ function redefine_vendor_id() {
     if(is_checkout()) {
         $vendor_id = get_vendor_id_from_cart();
         $cookie_expiry = time() + (365 * 24 * 60 * 60); // 1 year
-        setcookie('vendorId', $vendor_id, $cookie_expiry, '/');
+        set_vendor_cookie($vendor_id, $cookie_expiry);
     }
 }
 

@@ -7,7 +7,7 @@ ul.woocommerce-error {
 /* remove underline from required fields */
 .validate-required .required {
 	text-decoration: none;
-	color: var(--color-danger);
+	color: var(--color-danger);;
 }
 
 /* align all checkboxes */
@@ -102,4 +102,13 @@ li[data-id="accept_policies"] {
 }
 .wc_payment_methods.payment_methods.methods > li > label {
 	display: inline;
+}
+
+/* fix login button position */
+.woocommerce-checkout .woocommerce-form-login .form-row:nth-of-type(4) {
+	flex-direction: column;
+	align-items: flex-start;
+}
+.woocommerce-checkout .woocommerce-form-login .form-row:nth-of-type(4) br {
+	display: none;
 }

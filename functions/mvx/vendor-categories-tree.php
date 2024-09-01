@@ -69,18 +69,17 @@ function display_vendor_categories_tree($vendor_id, $path) {
 }
 
 function display_vendor_category_tree($categories, $path, $sub_menu = false) {
-    echo '<ul>';
+    echo '<ul' . ($sub_menu? ' class="sub-menu" style="display: none"' : '') . '>';
     foreach ($categories as $category) {
-        echo '<li';
-        if($sub_menu) echo ' id="sub-item-category"'; // in order to add a bullet icon via css
+        echo '<li class="parent-category"';
         if(empty($category->children)) echo ' class="without-children"';
         echo '>';
-        echo "<a href='$path?category=$category->slug'>" . esc_html($category->name);
+        echo "<a href='$path?category=$category->slug'>" . esc_html($category->name) . '</a>';
         if (!empty($category->children)) {
-            echo '<span style="margin-right: 10px;">&#x2B9C;</span><br/>'; // arrow icon
-            display_vendor_category_tree($category->children, $path, true);
+            echo '<i class="fas fa-angle-down toggle"></i>'; // define expand icon
+            display_vendor_category_tree($category->children, $path, true); // define sub-menu
         }
-        echo "</a></li>";
+        echo "</li>";
     }
     echo '</ul>';
 }
@@ -95,3 +94,11 @@ function vendor_categories_tree_action($vendor_id) {
     display_vendor_categories_tree($vendor_id, $path);
 }
 add_action('display_vendor_categories', 'vendor_categories_tree_action', 10, 1);
+
+
+/* enqueue script */
+add_action('wp_enqueue_scripts', 'enqueue_custom_categories_menu_script');
+function enqueue_custom_categories_menu_script() {
+    wp_enqueue_script('custom-categories_menu', get_template_directory_uri() . '-child/assets/js/custom/categories_menu.js', array('jquery'), null, true);
+    wp_localize_script('custom-categories_menu', 'custom_categories_params', array('ajax_url' => admin_url('admin-ajax.php')));
+}

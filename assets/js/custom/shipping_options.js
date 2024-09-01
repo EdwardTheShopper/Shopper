@@ -80,7 +80,7 @@ jQuery(document).ready(function($) {
         // remove previous shipping cost from the cart (if exists)
         $('tr.fee').remove(); // do it first for better display
         $('tr.shipping').remove();
-
+        
         // add the current shipping cost to the cart
         $.ajax({
             type: 'POST',

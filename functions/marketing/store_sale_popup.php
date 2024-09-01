@@ -1,17 +1,20 @@
 <?php
 
 function add_popup_script() {
-
+    
     // make sure the current URL is associated with a specific store (store page, product page, search page etc..)
     if(strpos($_SERVER['REQUEST_URI'], '/store/') === false)
         return;
 
+    /* NOTE: the popup shouldn't appear on "general" pages, therefore, do not use the function "get_vendor_id()" */
     $vendor_id = mvx_find_shop_page_vendor();
     if(!$vendor_id) // double check
+    {
+        setcookie('TEST_DEBUG_POPUP_SCRIPT_CANT_FIND_vendorId_MVX', true);
         return;
-
-	// set vendorId cookie (used by fibosearch)
-    setcookie('vendorId', $vendor_id, (time() + /* 24h in seconds */ 86400 + /* GMT+3 fix */ 10800), '/');
+    }
+    
+    set_vendor_cookie($vendor_id); // used by fibosearch
 
     // check if popup is active (ACF)
     if(!get_field('acf_enable_popup', 'user_' . $vendor_id))

@@ -7,7 +7,7 @@
 */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css');
 
-.popoup-sale-global{
+.popoup-sale-global {
     text-align: center;
     position: fixed;
     top: 50%;
@@ -16,14 +16,17 @@
     background: #fff;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     z-index: 9999;
 }
-
-.popoup-sale-global .popup-message{
+.popoup-sale-global .popup-message {
     padding: 10px;
     text-align: center;
 }
-.popoup-sale-global button a{
+.popoup-sale-global button {
+    border-radius: var(--size-form-radius);
+}
+.popoup-sale-global button a {
     color: white;
 }
 .overlay {
@@ -120,9 +123,4 @@
 
 .vendor_address p, a.mvx_vendor_detail {
     margin: 0px !important;
-}
-
-
-li[data-id="accept_policies"] {
-    display: none;
 }

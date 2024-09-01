@@ -48,7 +48,7 @@ function get_default_message() {
 
 /* get ACF custom field for this specific store */
 function get_delivery_rule($number) {
-    $vendor_id = get_vendor_id_from_cart();
+    $vendor_id = get_vendor_id();
     $delivery_rule = get_field('delivery_rule_' . $number, 'user_' . $vendor_id);    
     return $delivery_rule['active'] ? $delivery_rule : null;
 }

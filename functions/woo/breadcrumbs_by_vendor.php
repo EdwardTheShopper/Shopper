@@ -5,38 +5,42 @@
  * Override Woocommerce Breadcrumbs
  */
 add_filter('woocommerce_get_breadcrumb', 'customize_wc_breadcrumbs', 10, 2);
-function customize_wc_breadcrumbs($crumbs, $breadcrumb)
-{
-    // Check if a vendor is set
-    $vendor_id = current_vendor_id();
-    $storeName = getLastSegmentFromUrl();
+function customize_wc_breadcrumbs($crumbs, $breadcrumb) {
+    $vendor_id = get_vendor_id();
+    
+    if($vendor_id) {
+        foreach($crumbs as $key => $crumb) {
+            $category_id = get_term_by('name', $crumb[0], 'product_cat')->term_id;
+            $query = $category_id ? '?filter_cat=' . $category_id : "";
+            $crumbs[$key][1] = get_site_url() . get_vendor_slug($vendor_id) . $query;
+        }
+    }
+    return $crumbs;
+}
 
+
+/* old function using slug
+function customize_wc_breadcrumbs($crumbs, $breadcrumb) {
+
+    $vendor_id = get_vendor_id();
+    $vendor_slug = get_vendor_slug($vendor_id);
+    
     if($vendor_id) {
         foreach ($crumbs as $key => $crumb) {
             $category_id = get_term_by('name', $crumb[0], 'product_cat')->slug;
             $query = $category_id ? '?category=' . $category_id : "";
-            $crumbs[$key][1] = get_site_url() . '/store/' . $storeName . $query;
+            $crumbs[$key][1] = get_site_url() . $vendor_slug . $query;
         }
     }
-
     return $crumbs;
 }
-
-// Function to get current vendor ID - this is just a placeholder, use your vendor plugin's function
-function current_vendor_id()
-{
-    $vendor_id = mvx_find_shop_page_vendor();
-    return $vendor_id; // Replace this with actual logic
-}
-
-
-function getLastSegmentFromUrl()
-{
+*/
+/* unused
+function getLastSegmentFromUrl() {
     $url = $_SERVER['REQUEST_URI'];
-
     $parsedUrl = parse_url($url);
 
-    if (!isset($parsedUrl['path'])) {
+    if(!isset($parsedUrl['path'])) {
         return false;
     }
 
@@ -54,3 +58,4 @@ function getLastSegmentFromUrl()
 
     return false;
 }
+*/

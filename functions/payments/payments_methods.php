@@ -6,7 +6,7 @@
 add_filter('woocommerce_available_payment_gateways', 'conditionally_hide_payment_gateways', 10, 1);
 function conditionally_hide_payment_gateways($available_gateways) {
     if(is_checkout() && !is_wc_endpoint_url()) {
-        $vendor_id =  get_vendor_id_from_cart();
+        $vendor_id = get_vendor_id_from_cart();
     
         $enable_delivery = get_field('acf_enable_delivery', 'user_' . $vendor_id);
         $enable_delivery = empty($enable_delivery)? 0 : 1;

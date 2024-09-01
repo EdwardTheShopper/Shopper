@@ -2,8 +2,18 @@
 /**
  * Author: Mohammad Daqa
  * Created: 19/10/2023
- * Need to change the domain for each website
+ *
+ * dynamic domains were added by Sharon Chen on 11/06/2024 (STILL IN PROGRESS)
  */
+
+function get_domains()
+{
+    $domainsString = get_option('domains');
+    $domains = array_map('trim', explode(',', $domainsString)); // convert to an array
+    $domains = array_map('trim', $domains); // remove spaces
+    return $domains;
+}
+
 add_action('init', 'handle_preflight');
 function handle_preflight()
 {
@@ -11,15 +21,17 @@ function handle_preflight()
     $domains = [
         'http://localhost:3000/', 'http://localhost:3000',
         'https://localhost:3000/', 'https://localhost:3000',
-        'https://seller-app-prod.web.app/', 'https://seller-app-prod.web.app',
-        'https://seller-app-admin.web.app/', 'https://seller-app-admin.web.app',
-        'https://www.shopper.shop/', 'https://www.shopper.shop'
-    ];
+        'https://seller-app-stg.web.app/', 'https://seller-app-stg.web.app',
+        'https://shopperstgenv.wpengine.com/', 'https://shopperstgenv.wpengine.com'
+    ]; 
+    
+    /* TODO: try this code instead of lines 21-26
 
-
+        $domains = get_domains();
+    */
+ 
     $isValidOrigin = in_array($origin, $domains);
 
-    // echo "CORS-Testing@handle_preflight origin={$origin}, isValidOrigin={$isValidOrigin}";
     if ($isValidOrigin) {
         header("Access-Control-Allow-Origin: {$origin}");
         header("Access-Control-Allow-Methods: *");
@@ -39,17 +51,20 @@ function rest_filter_incoming_connections($errors)
     $origin = get_http_origin();
     $request_server = $_SERVER['REMOTE_ADDR'];
 
-    // echo "CORS-Testing- origin={$origin}, remote_addr={$request_server}, ";
-
     $domains = [
         'http://localhost:3000/', 'http://localhost:3000',
         'https://localhost:3000/', 'https://localhost:3000',
-        'https://seller-app-prod.web.app/', 'https://seller-app-prod.web.app',
-        'https://seller-app-admin.web.app/', 'https://seller-app-admin.web.app',
-        'https://www.shopper.shop/', 'https://www.shopper.shop',
+        'https://seller-app-stg.web.app/', 'https://seller-app-stg.web.app',
+        'https://shopperstgenv.wpengine.com/', 'https://shopperstgenv.wpengine.com',
         $postman
     ];
 
+    /* TODO: try this code instead of lines 53-59
+    
+        $domains = get_domains();
+        $domains[] = $postman; // add postman to the end of the array (is it necessary? postman is empty)
+    */
+    
     $isForbiddenOrigin = !in_array($origin, $domains);
 
     if ($isForbiddenOrigin) {

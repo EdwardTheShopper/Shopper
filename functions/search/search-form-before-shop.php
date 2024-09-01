@@ -1,6 +1,6 @@
 <?php
-/** 
- * 
+/**
+ *
  * Vendor storeFibesearch override
  * Remove the false from the if statment from menu_cat in line ~64
  * Also remove .before-shop-loop .shop-view-selector {

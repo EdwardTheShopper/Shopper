@@ -110,26 +110,16 @@ function toggle_policy_script() {
     <script>
         function togglePolicy(policy_position) {
             jQuery(document).ready(function() {
-                var $policy_wrapper = jQuery(`#policy_${policy_position}_wrapper`);
                 var $policy_content = jQuery(`#policy_${policy_position}`);
-                var $policy_arrow = jQuery(`#policy_${policy_position}_wrapper #arrow`);
 
-                if($policy_content.height() === 0) {
-                    $policy_content.animate({ height: $policy_content[0].scrollHeight }, 300)
-                    $policy_wrapper.addClass('expanded');
-                    
-                    // flip arrow
-                    $policy_arrow.removeClass('fa-angle-down');
-                    $policy_arrow.addClass('fa-angle-up');
-                }
-                else {
-                    $policy_content.animate({ height: 0 }, 300);
-                    $policy_wrapper.removeClass('expanded');
-                    
-                    // flip arrow back
-                    $policy_arrow.removeClass('fa-angle-up');
-                    $policy_arrow.addClass('fa-angle-down');
-                }
+                // open / close panel
+                jQuery(`#policy_${policy_position}_wrapper`).toggleClass('expanded');
+                $policy_content.animate(
+                    { height: $policy_content.height() === 0  ? $policy_content[0].scrollHeight : 0 }
+                , 300);
+
+                // flip arrow
+                jQuery(`#policy_${policy_position}_wrapper #arrow`).toggleClass('fa-angle-up fa-angle-down');
             });
         }
     </script>

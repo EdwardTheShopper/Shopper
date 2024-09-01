@@ -8,16 +8,13 @@ include 'functions/woo/checkout/shipping_options.php'; // in order to use 'add_s
 
 /* ?? */
 add_action('wp_enqueue_scripts', 'enqueue_custom_scripts');
-function enqueue_custom_scripts()
-{
-    if (is_checkout()) {
+function enqueue_custom_scripts() {
+    if (is_checkout())
         wp_enqueue_script('jquery');
-    }
 }
 
 /* get ACF custom field for this specific store */
-function get_enable_delivery()
-{
+function get_enable_delivery() {
     $vendor_id = get_vendor_id_from_cart();
     $enable_delivery = get_field('acf_enable_delivery', 'user_' . $vendor_id);
     return empty($enable_delivery) ? 0 : 1;
@@ -25,8 +22,7 @@ function get_enable_delivery()
 
 /* define a checkbox for "איסוף עצמי" */
 add_filter('woocommerce_checkout_fields', 'define_shipping_method_checkbox');
-function define_shipping_method_checkbox($fields)
-{
+function define_shipping_method_checkbox($fields) {
     $fields['billing']['pickup_option'] = array(
         'type' => 'checkbox',
         'class' => array('pickup-option form-row-wide'),
@@ -38,21 +34,20 @@ function define_shipping_method_checkbox($fields)
 
 /* define customer details fields, including their order of appearance and custom labels / placeholders */
 add_filter('woocommerce_checkout_fields', 'define_checkout_fields', 20);
-function define_checkout_fields($fields)
-{
+function define_checkout_fields($fields) {
     // manually set priorities:
     $fields['billing']['billing_first_name']['priority']= 1;
     $fields['billing']['billing_last_name']['priority'] = 2;
-    $fields['billing']['billing_phone']['priority'] 	= 3;
-    $fields['billing']['billing_email']['priority']		= 4;
-    $fields['billing']['billing_company']['priority'] 	= 5;
+    $fields['billing']['billing_phone']['priority']     = 3;
+    $fields['billing']['billing_email']['priority']     = 4;
+    $fields['billing']['billing_company']['priority']   = 5;
     $fields['billing']['pickup_option']['priority']     = 6; // shipping method checkbox
     $fields['billing']['billing_city']['priority']      = 7;
     $fields['billing']['billing_address_1']['priority'] = 8;
     $fields['billing']['billing_postcode']['priority']  = 9; // represents street-number
     $fields['billing']['billing_address_2']['priority'] = 10;
-	$fields['billing']['delivery_rules']['priority']    = 11;
-    // 'accept_policies' priority will be set conditionally from policies.php ( = 12);	
+    $fields['billing']['delivery_rules']['priority']    = 11;
+    // 'accept_policies' priority will be set conditionally from policies.php ( = 12);
 
     // manually set labels and placeholders:
     $fields['billing']['billing_city']['label'] = 'ישוב';
@@ -69,8 +64,7 @@ function define_checkout_fields($fields)
 
 /* permanently disable unused fields */
 add_filter('woocommerce_checkout_fields', 'unset_unused_fields', 30);
-function unset_unused_fields($fields)
-{
+function unset_unused_fields($fields) {
     unset($fields['billing']['billing_state']);
     unset($fields['billing']['billing_country']);
     unset($fields['shipping']['shipping_company']);
@@ -85,8 +79,7 @@ function unset_unused_fields($fields)
 
 /* permanently disable delivery fields for stores that has no delivery available */
 add_filter('woocommerce_checkout_fields', 'unset_delivery_fields', 40);
-function unset_delivery_fields($fields)
-{
+function unset_delivery_fields($fields) {
     if(!get_enable_delivery()) {
         unset($fields['billing']['billing_city']);
         unset($fields['billing']['billing_address_1']);
@@ -99,8 +92,7 @@ function unset_delivery_fields($fields)
 
 /* disable delivery fields (after submit) if the user chose "איסוף עצמי" */
 add_filter('woocommerce_checkout_fields', 'conditionally_unset_delivery_fields', 50);
-function conditionally_unset_delivery_fields($fields)
-{
+function conditionally_unset_delivery_fields($fields) {
     if(isset($_POST['pickup_option']) && $_POST['pickup_option'] == 1) {
         unset($fields['billing']['billing_address_1']);
         unset($fields['billing']['billing_postcode']); // represents street-number
@@ -113,11 +105,9 @@ function conditionally_unset_delivery_fields($fields)
 
 /* show / hide delivery fields on every change in "איסוף עצמי" checkbox (relevant only for stores with delivery) */
 add_action('wp_footer', 'conditionally_show_delivery_fields');
-function conditionally_show_delivery_fields()
-{
-    if(!get_enable_delivery()) {
+function conditionally_show_delivery_fields() {
+    if(!get_enable_delivery())
         return;
-    }
     if(is_checkout()) : ?>
         <script type="text/javascript">
             jQuery(document).ready(function($) {
@@ -146,7 +136,7 @@ function conditionally_show_delivery_fields()
                         })
                     } else {
                         $('#billing_city_field').show();
-                        $('#billing_city_field').before('<div style="width:100%; padding: 10px;"><h3>פרטי משלוח</h3></div>')
+                        $('#billing_city_field').before('<div style="width:100%; padding: 10px"><h3>פרטי משלוח</h3></div>')
                         $('#billing_address_1_field').show();
                         $('#billing_postcode_field').show(); // represents street-number
                         $('#billing_address_2_field').show();
@@ -160,21 +150,17 @@ function conditionally_show_delivery_fields()
 
 /* ?? */
 add_action('woocommerce_checkout_update_order_meta', 'pickup_field_update_order_meta');
-function pickup_field_update_order_meta($order_id)
-{
-    if(isset($_POST['pickup_option'])) {
+function pickup_field_update_order_meta($order_id) {
+    if(isset($_POST['pickup_option']))
         update_post_meta($order_id, 'pickup_option', esc_attr($_POST['pickup_option']));
-    }
 }
 
 /* ?? */
 add_action('woocommerce_admin_order_data_after_billing_address', 'display_pickup_option_in_admin', 10, 1);
-function display_pickup_option_in_admin($order)
-{
+function display_pickup_option_in_admin($order) {
     $pickup = get_post_meta($order->get_id(), 'pickup_option', true);
-    if($pickup) {
+    if($pickup)
         echo '<p><strong>' . __('Pickup Option:') . '</strong> ' . __('Yes') . '</p>';
-    }
 }
 
 /* enqueue script */

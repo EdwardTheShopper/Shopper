@@ -28,7 +28,6 @@ function insert_php_file_at_footer()
     var latitude1 = position.coords.latitude;
     var longitude1 = position.coords.longitude;
     jQuery('#vendors-latlng li').each(function(i, li) {
-        console.log('vendors-latlng li');
     var latitude2 = jQuery(this).attr("data-lat");  
     var longitude2 = jQuery(this).attr("data-lng"); 
     var id = jQuery(this).attr("data-id"); 
@@ -292,7 +291,7 @@ function insert_php_file_at_footer()
                     "Product Title": jQuery(".product_title").text(),
                     "SKU": jQuery(".sku").first().text() || "NA",
                     "Brand Name": jQuery(".woocommerce-product-attributes-item--attribute_pa_brands a").text() || "NA",
-                    "Shop Name": jQuery(".store-info a").text() || "NA",
+                    "Shop Name": jQuery(".store-info a").eq(1).text() || "NA", //jQuery(".store-info a").text() + " sec 1" || "NA",
                     "Store Main category": jQuery(".woocommerce-breadcrumb").find("li").eq(1).text(),
                     "Store Sub category": jQuery(".woocommerce-breadcrumb").find("li").eq(2).text(),
                     "Store Sub category": jQuery(".woocommerce-breadcrumb").find("li").eq(3).text(),

@@ -33,11 +33,6 @@
 	<div class="site-overlay"></div>
     <?php
 
-/** 
-*   Need to check why this function exists no data used by it
-*   if we need to delete it also check footer_tracking.php line 30.
-*/ 
-
    $vendors = get_mvx_vendors($args = array(), $return = 'id');
 echo '<ul id="vendors-latlng">';
 foreach ($vendors as $vendor_id) {
@@ -49,23 +44,110 @@ echo '</ul>';
 
 ?>
 	<?php wp_footer(); ?>
-
-<!-- Google Ads tracking code -->
+    <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false&libraries=geometry&key=AIzaSyCBJJZNPd7bCU0XpvDdLvwpC8jBJrAsiyk"></script>
 <script>
-  window.addEventListener('load', function() {
-    jQuery('.add_to_cart_button,.single_add_to_cart_button,[href*="?add-to-cart="]').click(function() {
-      gtag('event', 'conversion', {
-        'send_to': 'AW-16497851603/8RVrCMDlybgZENP55Lo9'
-      });
-    });
-    document.addEventListener('click', function(e) {
-      if (e.target.closest('#place_order')) {
-        gtag('event', 'conversion', {
-          'send_to': 'AW-16497851603/IDUoCMPlybgZENP55Lo9'
-        });
+
+jQuery(document).ready(function(){
+  var x = document.getElementById("demo");
+  
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+
+  jQuery(document).ajaxStop(function(){
+     if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+   });
+});
+
+
+
+function showPosition(position) {
+  var x = document.getElementById("location");
+  var latitude1 = position.coords.latitude;
+  var longitude1 = position.coords.longitude;
+  jQuery('#vendors-latlng li').each(function(i, li) {
+  var latitude2 = jQuery(this).attr("data-lat");  
+  var longitude2 = jQuery(this).attr("data-lng"); 
+  var id = jQuery(this).attr("data-id"); 
+
+  if(latitude2 !=='' || longitude2 !==''){
+  var start = {lat: parseFloat(latitude1), lng: parseFloat(longitude1)};
+  var destination = {lat: parseFloat(latitude2), lng: parseFloat(longitude2)}; 
+  let directionsService = new google.maps.DirectionsService();
+  let directionsRenderer = new google.maps.DirectionsRenderer();
+  //directionsRenderer.setMap(map); // Existing map object displays directions
+  // Create route from existing points used for markers
+  const route = {
+      origin: start,
+      destination: destination,
+      travelMode: 'DRIVING'
+  }
+
+  directionsService.route(route,
+    function(response, status) { // anonymous function to capture directions
+      
+      if (status !== 'OK') {
+        
+        return;
+      } else {
+        directionsRenderer.setDirections(response); // Add route to the map
+        var directionsData = response.routes[0].legs[0]; // Get data about the mapped route
+        if (!directionsData) {
+          window.alert('Directions request failed');
+          return;
+        }
+        else {
+          
+           var distance = directionsData.distance.text + ' from you';
+           var store_cls = 'dist-'+id;
+  
+    jQuery('.'+store_cls).html(distance);
+         
+        }
       }
     });
-  })
+
+  
+   
+  }
+   
+  });
+ 
+}
+
+jQuery('body').on('click', '.quick-view-button', function() {
+   setTimeout(function(){
+       //alert('ok'); 
+      if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+ window.scrollTo(0, 0);
+}
+else{
+       jQuery('.mfp-wrap').scrollTop(0);
+}
+       //window.scrollTo(0, 0);
+       //$(window).scrollTop( $("#topofthePage").offset().top );
+       // jQuery("html, body").animate({ scrollTop: jQuery(".mfp-wrap")}, 1000);
+     }, 1000);
+});
+
+jQuery('body').on('click', '.wcmp-report-abouse-wrapper .close', function() {
+//jQuery(".wcmp-report-abouse-wrapper .close").on('click', function () {
+       // jQuery(".wcmp-report-abouse-wrapper #report_abuse_form").slideToggle(500);
+    });
+
+    jQuery('body').on('click', ' #report_abuse', function() {
+    //alert('ok');
+    //jQuery('.wcmp-report-abouse-wrapper #report_abuse').on('click', function () {
+        //jQuery(".wcmp-report-abouse-wrapper #report_abuse_form").slideToggle(1000);
+    });
+    
+
 </script>
 	</body>
 </html>

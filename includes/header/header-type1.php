@@ -1,13 +1,3 @@
-<?php
-$vendor = get_mvx_product_vendors(get_the_ID());
-$vendorId = $vendor->id;
-if (!empty($vendorId) && !is_front_page() && !is_cart() && !is_checkout()) {
-    // Set the cookie with a value if not empty and keep it for 1 year
-    $cookie_expiry = time() + (365 * 24 * 60 * 60); // 1 year
-    setcookie('vendorId', $vendorId, $cookie_expiry, '/');
-}
-?>
-
 <header id="masthead" class="site-header desktop-shadow-disable mobile-shadow-enable mobile-nav-enable" itemscope="itemscope" itemtype="http://schema.org/WPHeader">
     <?php if (get_theme_mod('bacola_top_header', 0) == 1) { ?>
         <div class="header-top header-wrapper hide-mobile">
@@ -42,17 +32,17 @@ if (!empty($vendorId) && !is_front_page() && !is_cart() && !is_checkout()) {
                     <div class="header-switchers">
                         <nav class="store-language site-menu horizontal">
                             <?php
-            wp_nav_menu(array(
-                'theme_location' => 'top-right-menu',
-                'container' => '',
-                'fallback_cb' => 'show_top_menu',
-                'menu_id' => '',
-                'menu_class' => 'menu',
-                'echo' => true,
-                "walker" => '',
-                'depth' => 0
-            ));
-        ?>
+                                wp_nav_menu(array(
+                                    'theme_location' => 'top-right-menu',
+                                    'container' => '',
+                                    'fallback_cb' => 'show_top_menu',
+                                    'menu_id' => '',
+                                    'menu_class' => 'menu',
+                                    'echo' => true,
+                                    "walker" => '',
+                                    'depth' => 0
+                                ));
+                            ?>
                         </nav><!-- site-menu -->
                     </div><!-- header-switchers -->
 
@@ -63,28 +53,34 @@ if (!empty($vendorId) && !is_front_page() && !is_cart() && !is_checkout()) {
     <div class="header-main header-wrapper">
         <div class="container">
             <div class="column column-left">
-                <div class="header-buttons hide-desktop">
+                <div class="header-buttons">
                     <div class="header-canvas button-item">
-                        <a href="#">
+                        <a href="#" class="filter-toggle">
                             <i class="klbth-icon-menu-thin"></i>
                         </a>
-                    </div><!-- button-item -->
+                    </div>
+                    <div class="button-item">
+                        <a href="<?php echo wc_get_page_permalink('myaccount'); ?>">
+                            <i class="klbth-icon-user"></i>
+                        </a>
+                    </div>
                 </div><!-- header-buttons -->
                 <div class="site-brand">
-     <?php
+                    <?php
 
-     if (is_front_page() || is_cart() || is_checkout() || is_archive()) {
-         $flag1 = 0;
-     } else {
-         $flag1 = 1;
-         $url = get_vendor_slug($vendorId);
-     }
+                        if (is_front_page() || is_cart() || is_checkout() || is_archive()) {
+                            $flag1 = 0;
+                        } else {
+                            $flag1 = 1;
+                            $url = get_vendor_slug($vendorId);
+                        }
 
-if($flag1) {
-    ?>
-
-                    <a href="<?php echo esc_url($url); ?>" title="<?php bloginfo("name"); ?>">
-                    <?php } ?>
+                        if($flag1 && false) {
+                            ?>
+                            <a href="<?php echo esc_url($url); ?>" title="<?php bloginfo("name"); ?>">
+                            <?php
+                        }
+                    ?>
                         <?php if (get_theme_mod('bacola_logo')) { ?>
                             <img class="desktop-logo hide-mobile" src="<?php echo esc_url(wp_get_attachment_url(get_theme_mod('bacola_logo'))); ?>" alt="<?php bloginfo("name"); ?>">
 
@@ -121,11 +117,21 @@ if($flag1) {
                 <!-- All categories filter -->
                 <?php //get_template_part('includes/header/models/sidebar-menu');?>
                 <?php if (get_theme_mod('bacola_header_search', 0) == 1) { ?>
+                    <?php
+                    if(!is_front_page()) { // get store logo
+                        $vendor_id = get_vendor_id();
+                        $vendor = get_user_meta($vendor_id);
+                    ?>
+                        <div class="mvx-profile-area">
+                            <a href="<?php echo get_vendor_slug($vendor_id); ?>">
+                                <img src="<?php echo $vendor['_vendor_profile_image'][0] ?? ""; ?>" alt="">
+                            </a>
+                        </div>                
+                    <?php } ?>
                     <div class="header-search">
-
                         <?php get_template_part('includes/header/models/sidebar-menu'); ?>
                         <?php if (get_theme_mod('bacola_ajax_search_form', 0) == 1 && class_exists('DGWT_WC_Ajax_Search')) { ?>
-                            <?php echo do_shortcode('[wcas-search-form]');  ?>
+                            <?php echo do_shortcode('[wcas-search-form]'); ?>
                         <?php } else { ?>
                             <?php echo bacola_header_product_search(); ?>
                         <?php } ?>
@@ -173,8 +179,6 @@ if($flag1) {
         </div><!-- container -->
     </div><!-- header-main -->
 
-
-
     <div class="header-nav header-wrapper hide-mobile">
         <div class="container">
 
@@ -193,7 +197,7 @@ if($flag1) {
                     "walker" => new bacola_main_walker(),
                     'depth' => 0
                 ));
-?>
+                ?>
             </nav><!-- site-menu -->
         </div><!-- container -->
     </div><!-- header-nav -->
@@ -410,7 +414,7 @@ if($name == 'noyatal147') {
         }
 
         // Checking if the browseris reloading
-        jQuery(window).on('load', function(event) {
+       jQuery(window).on('load', function(event) {
             if (performance.navigation.type == performance.navigation.TYPE_RELOAD) {
                 localStorage.setItem('state-load', 'true');
             }
@@ -560,91 +564,8 @@ if($name == 'noyatal147') {
     })
 
 
-    // Amount Updating System
+    
     jQuery(document).ready(function() {
-
-        jQuery('.button-primary.xsmall.rounded.wide.button.product_type_simple.add_to_cart_button.ajax_add_to_cart').on('click', function() {
-            productId = jQuery(this).attr('data-product_id');
-            amountEle = jQuery(this).parents('.product-type-2').find('.woocommerce-product-attributes-item--attribute_pa_amount td.woocommerce-product-attributes-item__value > p > a').text();
-            priceEle = jQuery(this).parents('.product-type-2').find('.price').text();
-            if (amountEle != '' && priceEle != '') {
-                var arr = amountEle.split(" ");
-                var numberPattern = /[0-9]+/g;
-                orgPrice = priceEle.replace('₪', '');
-                orgAmount = '';
-                orgAmountUnit = '';
-                jQuery.each(arr, function(index, value) {
-                    if (value.match(numberPattern)) {
-                        orgAmount = value;
-                    } else {
-                        orgAmountUnit = value;
-                    }
-                });
-
-                var orgAmountObj = {
-                    'amount': orgAmount,
-                    'unit': orgAmountUnit,
-                    'price': orgPrice
-                }
-                if (!localStorage.getItem(productId)) {
-                    localStorage.setItem(productId, JSON.stringify(orgAmountObj));
-                }
-            }
-        })
-
-        // Increase Amount on + click
-        jQuery('.klbth-icon-plus').on('click', function() {
-            amountEle = jQuery(this).parents('.product-type-2').find('.woocommerce-product-attributes-item--attribute_pa_amount td.woocommerce-product-attributes-item__value > p > a').text();
-            productIdEle = jQuery(this).parents('.product-type-2').find('.product-title').children().attr('href');
-            if (amountEle != '') {
-                orgAmountObj = JSON.parse(localStorage.getItem(productIdEle));
-                var arr = amountEle.split(" ");
-                var numberPattern = /[0-9]+/g;
-                firstAmount = '';
-                firstAmountUnit = '';
-                jQuery.each(arr, function(index, value) {
-                    if (value.match(numberPattern)) {
-                        firstAmount = value;
-                    } else {
-                        firstAmountUnit = value;
-                    }
-                });
-                totalAmount = Number(firstAmount) + Number(orgAmountObj.amount);
-                jQuery(this).parents('.product-type-2').find('.woocommerce-product-attributes-item--attribute_pa_amount td.woocommerce-product-attributes-item__value > p').html(`<a href="http://localhost/ilshopper5stg/amount/${totalAmount}-%d7%92%d7%a8%d7%9d/" rel="tag" tabindex="0">${totalAmount} גרם</a>`);
-            }
-
-        })
-
-        // Decrease Amount on - click
-        jQuery('.klbth-icon-minus').on('click', function() {
-            amountEle = jQuery(this).parents('.product-type-2').find('.woocommerce-product-attributes-item--attribute_pa_amount td.woocommerce-product-attributes-item__value > p > a').text();
-            productIdEle = jQuery(this).parents('.product-type-2').find('.product-title').children().attr('href');
-            if (amountEle != '') {
-                orgAmountObj = JSON.parse(localStorage.getItem(productIdEle));
-                var arr = amountEle.split(" ");
-                var numberPattern = /[0-9]+/g;
-                firstAmount = '';
-                firstAmountUnit = '';
-                jQuery.each(arr, function(index, value) {
-                    if (value.match(numberPattern)) {
-                        firstAmount = value;
-                    } else {
-                        firstAmountUnit = value;
-                    }
-                });
-                if (firstAmount != orgAmountObj.amount) {
-                    totalAmount = Number(firstAmount) - Number(orgAmountObj.amount);
-                    jQuery(this).parents('.product-type-2').find('.woocommerce-product-attributes-item--attribute_pa_amount td.woocommerce-product-attributes-item__value > p').html(`<a href="http://localhost/ilshopper5stg/amount/${totalAmount}-%d7%92%d7%a8%d7%9d/" rel="tag" tabindex="0">${totalAmount} גרם</a>`);
-                }
-
-            }
-
-        })
-
-    })
-
-    jQuery(document).ready(function() {
-
         // Get current page URL
         var currentUrl = window.location.href;
 
@@ -662,13 +583,3 @@ if($name == 'noyatal147') {
     })
 </script>
 <!-- Popup AND Visitor Functionality => ENDS -->
-
-<!-- Google Ads tracking code -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-16497851603"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'AW-16497851603');
-</script>

@@ -72,7 +72,7 @@ function bacola_catalog_ordering_start_child()
 					<input type="hidden" name="post_type" value="product">
 				</form>
 			</div>
-			   <?php
+		<?php
             }
     ?>
 			<div class="mobile-filter">

@@ -6,6 +6,7 @@ include_once('functions/search/search_by_title.php');
 
 //include_once('functions/search/search-form-before-shop.php'); //Vendor storeFibesearch override
 
+include_once('functions/user/custom_color_palette.php');
 include_once('functions/user/user_search.php');
 include_once('functions/user/reset_pass.php');
 
@@ -16,19 +17,18 @@ include_once('functions/woo/checkout/policies.php');
 include_once('functions/woo/checkout/shipping_options.php');
 include_once('functions/woo/checkout/woo_cart_validation.php');
 include_once('functions/woo/checkout/woo_order_status.php');
-include_once('functions/woo/image_attributes.php');
 
-include_once('functions/woo/woo_cat.php');
-include_once('functions/woo/products_vendor.php');
-include_once('functions/woo/fast_view.php');
-include_once('functions/woo/woo_seo.php');
-include_once('functions/woo/import_product.php');
-include_once('functions/woo/related_product/add_related_single_product.php');
-include_once('functions/woo/related_product/display_related_product.php');
-include_once('functions/woo/related_product/remove_product_data_tabs.php');
+
 include_once('functions/woo/breadcrumbs_by_vendor.php');
 include_once('functions/woo/disable_image_zoom.php');
-include_once('functions/woo/rename_tabs.php');
+include_once('functions/woo/display_related_product.php');
+include_once('functions/woo/fast_view.php');
+include_once('functions/woo/handle_product_tabs.php');
+include_once('functions/woo/image_attributes.php');
+include_once('functions/woo/import_product.php');
+include_once('functions/woo/products_vendor.php');
+include_once('functions/woo/woo_cat.php');
+include_once('functions/woo/woo_seo.php');
 
 include_once('functions/tracking/visitor_detail.php');
 include_once('functions/tracking/mixpanel_head.php'); // only use in production
@@ -39,12 +39,14 @@ include_once('functions/marketing/send_prom_email.php');
 include_once('functions/marketing/store_sale_popup.php');
 
 include_once('functions/mvx/store_info.php');
+//include_once('functions/mvx/vendor-categories-tree.php');
 //include_once('functions/mvx/all-categories-filter-search.php'); Duplicate issue with bacola parent in line 339 in functions
 
 include_once('functions/payments/payments_methods.php'); // replacing credit2000payment.php
 include_once('functions/global/custom-options-page.php');
 include_once('functions/global/import_product.php');
 include_once('functions/global/include_js_files.php');
+include_once('functions/global/get_vendor_id.php');
 include_once('functions/global/get_vendor_slug.php');
 include_once('functions/global/cors.php');
 include_once('functions/global/menu_cat.php');
@@ -321,9 +323,9 @@ add_action('woocommerce_no_products_found', 'ab_no_products_found');
 
 function ab_no_products_found()
 {
-    echo '<p style="margin-bottom: 40px;" class="woocommerce-info">לא נמצאו מוצרים התואמים לבחירה שלך.</p>';
+    echo '<p style="margin-bottom: 40px; font-size: 1.5rem;" class="woocommerce-info">לא נמצאו מוצרים התואמים לבחירה שלך.</p>';
     // echo do_shortcode('[elementor-template id="3129"]');
-    echo do_shortcode('[elementor-template id="111111111124516"]');
+    // echo do_shortcode('[elementor-template id="111111111124516"]');
 }
 
 add_filter('comment_post_redirect', 'redirect_after_comment');
@@ -564,6 +566,7 @@ function enqueue_mobile_search_script() {
 
 
 
+/* Override sidebar function */
 function unregister_klb_product_categories_widget() {
     unregister_widget('klb_widget_klb_product_categories');
    
@@ -571,10 +574,7 @@ function unregister_klb_product_categories_widget() {
     wp_enqueue_style('custom_product_categories', get_template_directory_uri() . '-child/woocommerce-filter/widgets/product-categories/css/widget-product-categories-rtl.css', array(), null, 'all');
     wp_enqueue_style('custom_product_categories', get_template_directory_uri() . '-child/woocommerce-filter/widgets/product-categories/css/widget-product-categories.css', array(), null, 'all');
     include_once ('woocommerce-filter/widgets/product-categories/custom-widget-product-categories.php');
-    
     register_widget('Custom_Widget_Product_Categories');
 
 }
 add_action('widgets_init', 'unregister_klb_product_categories_widget', 11);
-
-

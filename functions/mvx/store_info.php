@@ -59,7 +59,7 @@ function store_info_shortcode_function($atts)
             </span>
         </div>
     </header>
-    <div style="text-align: center;">
+    <div id="separator-line" style="text-align: center;">
         <hr>
     </div>
 
@@ -67,18 +67,13 @@ function store_info_shortcode_function($atts)
         jQuery(document).ready(function() {
             jQuery('#toggle-header').click(function() {
                 var $storeInfo = jQuery('.store-info-toggle');
-                var $arrow = jQuery('#toggle-header #arrow');
-                if($storeInfo.height() === 0) {
-                    $storeInfo.animate({ height: $storeInfo[0].scrollHeight }, 300);
-                    jQuery('.arrow-toggle').addClass('expanded');
-                    $arrow.removeClass('fa-angle-down');
-                    $arrow.addClass('fa-angle-up');
-                } else {
-                    $storeInfo.animate({ height: 0 }, 300);
-                    jQuery('.arrow-toggle').removeClass('expanded');
-                    $arrow.removeClass('fa-angle-up');
-                    $arrow.addClass('fa-angle-down');
-                }
+                // open / close panel
+                jQuery('.arrow-toggle').toggleClass('expanded');
+                $storeInfo.animate(
+                    { height: $storeInfo.height() === 0  ? $storeInfo[0].scrollHeight : 0 }
+                , 300);
+                // flip arrow
+                jQuery('#toggle-header #arrow').toggleClass('fa-angle-up fa-angle-down');
             });
         });
     </script>

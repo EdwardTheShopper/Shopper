@@ -19,7 +19,7 @@ defined('ABSPATH') || exit;
 
 global $product;
 
-$vendor_id = get_post_field('post_author', $product->get_id());
+$vendor_id = get_vendor_id();
 $vendor = get_user_meta($vendor_id);
 $vendorImage = $vendor['_vendor_profile_image'][0] ?? "";
 $vendorBanner = $vendor['_vendor_banner'][0] ?? "";
@@ -136,87 +136,129 @@ $content_column = (12 - $image_column);
 ?>
 <div id="product-<?php the_ID(); ?>" <?php wc_product_class('', $product); ?>>
 
-<!-- Store Inof header -->
-<?php do_shortcode("[store_info_shortcode id=$vendor_id]"); ?>
+<!-- product page -->
+    <div class="product-content">
+        <div class="row">
+            <div class="col col-12 col-lg-<?php echo esc_attr($image_column); ?> product-images">
+                <?php
+                    /**
+                    * Hook: woocommerce_before_single_product_summary.
+                    *
+                    * @hooked woocommerce_show_product_sale_flash - 10
+                    * @hooked woocommerce_show_product_images - 20
+                    */
+                    do_action('woocommerce_before_single_product_summary');
+                ?>
+            </div>
 
-	<?php do_action('bacola_single_header_top'); ?>
+            <div class="col col-12 col-lg-<?php echo esc_attr($content_column); ?> product-detail">
+                <?php do_action('bacola_single_header_top'); /* product title */ ?> 
 
+                <?php do_action('bacola_single_header_side'); ?>
+                <div class="column">
+                    <?php
+                        /**
+                        * Hook: woocommerce_single_product_summary.
+                        *
+                        * @hooked woocommerce_template_single_title - 5
+                        * @hooked woocommerce_template_single_rating - 10
+                        * @hooked woocommerce_template_single_price - 10
+                        * @hooked woocommerce_template_single_excerpt - 20
+                        * @hooked woocommerce_template_single_add_to_cart - 30
+                        * @hooked woocommerce_template_single_meta - 40
+                        * @hooked woocommerce_template_single_sharing - 50
+                        * @hooked WC_Structured_Data::generate_product_data() - 60
+                        */
 
-	<div class="product-content">
-		<div class="row">
-			<div class="col col-12 col-lg-<?php echo esc_attr($image_column); ?> product-images">
-				<?php
-                /**
-                 * Hook: woocommerce_before_single_product_summary.
-                 *
-                 * @hooked woocommerce_show_product_sale_flash - 10
-                 * @hooked woocommerce_show_product_images - 20
-                 */
-               do_action('woocommerce_before_single_product_summary');
-?>
-			</div>
-			
-			<div class="col col-12 col-lg-<?php echo esc_attr($content_column); ?> product-detail">
+                        $short_description = $product->get_short_description();
+                        $chosen_description = empty($short_description) ? $product->get_description() : $short_description;
+                        define_collapsible_description($chosen_description);
 
-				<?php do_action('bacola_single_header_side'); ?>
+                        do_action('woocommerce_single_product_summary');
+                    ?>
+                </div>
 
-				<div class="column">
-					<?php
-    /**
-     * Hook: woocommerce_single_product_summary.
-     *
-     * @hooked woocommerce_template_single_title - 5
-     * @hooked woocommerce_template_single_rating - 10
-     * @hooked woocommerce_template_single_price - 10
-     * @hooked woocommerce_template_single_excerpt - 20
-     * @hooked woocommerce_template_single_add_to_cart - 30
-     * @hooked woocommerce_template_single_meta - 40
-     * @hooked woocommerce_template_single_sharing - 50
-     * @hooked WC_Structured_Data::generate_product_data() - 60
-     */
-     do_action('woocommerce_single_product_summary');
-?>
-				</div>
-				
-				<?php if(get_theme_mod('bacola_shop_single_featured_toggle', 0) == 1) { ?>
-					<?php $featured_title = get_theme_mod('bacola_shop_single_featured_title'); ?>
-					<div class="column product-icons">
-						<?php if($featured_title) { ?>
-							<div class="alert-message"><?php echo esc_html($featured_title); ?></div>
-						<?php } ?>
-						<div class="icon-messages">
-							<ul>
-								<?php $featured = get_theme_mod('bacola_single_featured_list'); ?>
-								<?php foreach($featured as $f) { ?>
-								<li>
-									<div class="icon"><i class="<?php echo esc_attr($f['featured_icon']); ?>"></i></div>
-									<div class="message"><?php echo esc_html($f['featured_text']); ?></div>
-								</li>
-								<?php } ?>
-
-							</ul>
-						</div>
-					</div>
-				<?php } ?>
-				
-			</div>
-			
-		</div>
-	</div>
+                <?php if(get_theme_mod('bacola_shop_single_featured_toggle', 0) == 1) { ?>
+                    <?php $featured_title = get_theme_mod('bacola_shop_single_featured_title'); ?>
+                    <div class="column product-icons">
+                        <?php if($featured_title) { ?>
+                            <div class="alert-message"><?php echo esc_html($featured_title); ?></div>
+                        <?php } ?>
+                        <div class="icon-messages">
+                            <ul>
+                                <?php $featured = get_theme_mod('bacola_single_featured_list'); ?>
+                                <?php foreach($featured as $f) { ?>
+                                <li>
+                                    <div class="icon"><i class="<?php echo esc_attr($f['featured_icon']); ?>"></i></div>
+                                    <div class="message"><?php echo esc_html($f['featured_text']); ?></div>
+                                </li>
+                                <?php } ?>
+                            </ul>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
 </div>
 
-	<?php
-    /**
-     * Hook: woocommerce_after_single_product_summary.
-     *
-     * @hooked woocommerce_output_product_data_tabs - 10
-     * @hooked woocommerce_upsell_display - 15
-     * @hooked woocommerce_output_related_products - 20
-     */
-    do_action('woocommerce_after_single_product_summary');
+<?php
+$delivery_element = get_field('acf_enable_delivery', 'user_' . get_vendor_id()) ? 
+    // has delivery
+    '<div id="delivery-element">
+        <i class="klbth-icon-delivery">
+            <span>משלוח עד הבית</span>
+            <i class="fa-solid" id="delivery-element-info-icon">i</i>
+        </i>
+        <div id="delivery-element-info-toggle">' . get_default_message() . '</div>
+    </div>'
+    : ''; // no delivery (set empty element)
 
+echo '
+    <div id="single_product_shipping_options">
+        <i class="klbth-icon-store"><span>איסוף עצמי מהחנות</span></i>'
+        . $delivery_element .
+    '</div>
+';
+?>
+<script>
+jQuery(document).ready(function() {
+    jQuery('#delivery-element').click(function() {
+        var $deliveryElementInfo = jQuery('#delivery-element-info-toggle');
+        // open / close panel
+        $deliveryElementInfo.animate(
+            { height: $deliveryElementInfo.height() === 0  ? $deliveryElementInfo[0].scrollHeight : 0 }
+        , 300);
+    });
+});
+</script>
+
+<?php
+/**
+* Hook: woocommerce_after_single_product_summary.
+*
+* @hooked woocommerce_output_product_data_tabs - 10
+* @hooked woocommerce_upsell_display - 15
+* @hooked woocommerce_output_related_products - 20
+*/
+
+related_products_tab_content(); // always show this content (outside the tabs-box)
+
+/* product tabs */
+do_action('woocommerce_after_single_product_summary');
 ?>
 
+<?php do_shortcode("[store_info_shortcode id=$vendor_id]"); /* store info */ ?>
+<?php
+    $store_name= get_mvx_vendor($vendor_id)->user_data->data->display_name;
+
+    $base_url = get_option('baseUrl');
+    $full_url = substr($base_url, 0, strlen($base_url)-1) . get_vendor_slug(get_vendor_id());
+
+    echo '<p style="margin-top: 1.25rem;">
+            <a href=' . $full_url . ' >מוצרים נוספים מאת ' . $store_name . '</a>
+        </p>';
+?>
 
 <?php do_action('woocommerce_after_single_product');?>
 
@@ -233,12 +275,6 @@ $featured_image_id = get_post_thumbnail_id($product->get_id());
 
 // Get the featured image URL
 $featured_image_url = wp_get_attachment_url($featured_image_id);
-
-$categories = wp_get_post_terms( $product->get_id(), 'product_cat' );
-foreach ( $categories as $category ) {
-    if($category)
-        $scemaAcf =  get_field('schema', 'product_cat_' . $category->term_id) ?? 'null';
-}
 
 ?>
 <script type="application/ld+json">
@@ -275,7 +311,6 @@ foreach ( $categories as $category ) {
       }
     }
   },
-  <?php echo $scemaAcf ?>
   "aggregateRating": {
     "@type": "AggregateRating",
     "ratingValue": "<?php echo $avg_rating; ?>",
@@ -286,4 +321,80 @@ foreach ( $categories as $category ) {
     "<?php echo $fb; ?>"
   ]
 }
+</script>
+
+
+<?php
+function define_collapsible_description($description) {
+    $cutoff = 250;
+
+    if(strlen($description) <= $cutoff) // content is short enough
+        // simple display of the entire description
+        echo '<p style="font-size: 14px; margin-bottom: 1.25rem;">'. $description . '</p>';
+
+    else { // has more content
+        // find a position to cut the description without breaking a word
+        $forward = strpos(substr($description, $cutoff), ' ');
+        $backward = strrpos(substr($description, 0, $cutoff), ' ');
+
+        if($forward !== false && $backward !== false) // check "false" explicitly - 0 is a valid value
+            // choose the closest to the cutoff
+            $cutoff = $forward < ($cutoff-$backward) ? ($cutoff+$forward) : $backward;
+        else if($forward !== false)
+            $cutoff = $cutoff+$forward;
+        else if($backward !== false)
+            $cutoff = $backward;
+        // else, fallback to original cutoff
+
+        // display the first part of the description
+        echo '<p style="font-size: 14px; margin-bottom: 0;">' . substr($description, 0, $cutoff) . '</p>';
+
+        // define the rest of the description in a collapsible panel:
+        echo '
+            <div id="description_toggle" style="margin-bottom: 1.25rem; cursor: pointer;">
+                <div id="description_content" style="height: 0; overflow: hidden;">
+                    <p>' . substr($description, $cutoff) . '</p>
+                </div>
+                <span class="description-arrow-toggle" id="description_wrapper" style="display: flex;"
+                >קרא עוד...<i class="fas fa-angle-down" id="arrow"></i>
+                </span>
+            </div>
+        ';
+
+        /*
+        // TODO: try to set the rest of description at the same line
+        echo '
+            <div id="description_toggle" style="display: flex; flex-direction: column; margin-bottom: 1.25rem; cursor: pointer;">
+                <p style="display: content; font-size: 14px; margin-bottom: 0;">'
+                    . substr($description, 0, $cutoff) // first part of description
+                    . '<span id="description_content" style="height: 0; overflow: hidden;">'
+                        . substr($description, $cutoff) // define the rest of the description in a collapsible panel
+                    . '</span>
+                    <span class="description-arrow-toggle" id="description_wrapper" style="display: flex;"
+                    >קרא עוד...<i class="fas fa-angle-down" id="arrow"></i>
+                    </span>
+                </p>
+            </div>
+        ';
+        */
+
+    }
+}
+
+/* script - toggle description text */
+?>
+<script>
+    jQuery(document).ready(function() {
+        function toggleDescription() {
+            var $description_content = jQuery('#description_content');
+            // open / close panel
+            jQuery('#description_wrapper').toggleClass('expanded');
+            $description_content.animate(
+                { height: $description_content.height() === 0 ? $description_content[0].scrollHeight : 0 }
+            , 300);
+            // flip arrow
+            jQuery('#description_wrapper #arrow').toggleClass('fa-angle-up fa-angle-down');            
+        }
+        jQuery('#description_toggle').on('click', toggleDescription);
+    });
 </script>

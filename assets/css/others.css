@@ -1,0 +1,12 @@
+/* main page - products on carousel */
+.products .slick-track {
+    display: flex !important;
+}
+.products .slick-slide {
+    height: inherit !important;
+}
+
+/* visible only on admin mode - do not cover the header */
+#wpadminbar {
+	position: absolute !important;
+}

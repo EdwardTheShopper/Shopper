@@ -30,27 +30,20 @@ global $product;
 
 	<?php endif; ?>
 	
-	<?php /* echo wc_get_product_category_list($product->get_id(), ', ', '<span class="posted_in">' . _n('קטגוריה:', 'קטגוריות:', count($product->get_category_ids()), 'bacola') . ' ', '</span>'); */?>
-	
-	<?php 
-		$url = "/store/" . getLastSegmentFromUrl() . "?category=";
-		$product_id = $product->get_id();  // Get the product ID
-
-		$categories = wp_get_post_terms( $product_id, 'product_cat' );  // Get categories
+	<?php
+		$url = get_vendor_slug(get_vendor_id()) . "?filter_cat=";
+		$product_id = $product->get_id();
+		$categories = wp_get_post_terms( $product_id, 'product_cat' );
 		
-		if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) {
-			echo '<div class="posted_in" style="white-space: nowrap;">קטגוריה: ';  // Use a div with white-space: nowrap
-			$links = [];  // Initialize an array to hold all the links
+		if(!empty($categories) && !is_wp_error($categories)) {
+			echo '<div class="posted_in" style="white-space: nowrap;">קטגוריה: ';
+			$links = [];
+			foreach($categories as $category)
+				$links[] = '<a href="' . esc_url($url . $category->term_id) .'">' . esc_html($category->name) . '</a>';
 		
-			foreach ( $categories as $category ) {
-				$links[] = '<a href="' . esc_url($url) . $category->slug .'">' . esc_html($category->name) . '</a>';  // Add the link to the array
-			}
-		
-			echo implode(', ', $links);  // Join all the links with a comma and a space, then echo them
-			echo '</div>';  // Close the div
+			echo implode(', ', $links);
+			echo '</div>';
 		}
-		
-
 	?>
 
 	<?php echo wc_get_product_tag_list($product->get_id(), ', ', '<span class="tagged_as">' . _n('תגית:', 'תגיות:', count($product->get_tag_ids()), 'bacola') . ' ', '</span>'); ?>

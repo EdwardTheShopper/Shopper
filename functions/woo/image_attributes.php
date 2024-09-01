@@ -18,7 +18,6 @@ function custom_product_image_attributes( $attr, $attachment, $size ) {
     // Check if the current post is a WooCommerce product
     if ( is_product() ) {
         global $product;
-        
         // Get the current product's name
         $product_name = $product->get_name();
         

@@ -47,8 +47,33 @@ span.subDropdown.plus:before {
 
 .widget .site-checkbox-lists li {
     margin-left: 15px;
+    cursor: pointer;
 }
 
 .widget.widget_custom_product_categories ul.children {
     display: none;
+}
+
+.widget.widget_custom_product_categories li {
+    align-items: center !important; /* adjustments for long labels: keep the +/- icon in the middle */
+    margin-top: 0.625rem; /* move the margin attribute from the link to the item itself */
+}
+.widget.widget_custom_product_categories li a {
+    margin-bottom: 0 !important; /* move the margin attribute from the link to the item itself */
+}
+
+
+/* adjustments for long labels: keep the +/- icon in the middle */
+span.subDropdown.minus:before, span.subDropdown.plus:before {
+/* TODO: instead of override, set it directly at the top of this page */
+    position: relative !important;
+    top: 0 !important;
+}
+
+.widget.widget_custom_product_categories li a label {
+    flex-wrap: nowrap; /* keep checkbox and text together */
+}
+
+.widget.widget_custom_product_categories li.cat-parent { /* applies only for parent-category items */
+    justify-content: space-between; /* keep the +/- icon as left as possible */
 }
