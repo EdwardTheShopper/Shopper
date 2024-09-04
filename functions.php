@@ -578,3 +578,4 @@ function unregister_klb_product_categories_widget() {
 
 }
 add_action('widgets_init', 'unregister_klb_product_categories_widget', 11);
+
