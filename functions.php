@@ -18,7 +18,6 @@ include_once('functions/woo/checkout/shipping_options.php');
 include_once('functions/woo/checkout/woo_cart_validation.php');
 include_once('functions/woo/checkout/woo_order_status.php');
 
-
 include_once('functions/woo/breadcrumbs_by_vendor.php');
 include_once('functions/woo/disable_image_zoom.php');
 include_once('functions/woo/display_related_product.php');
@@ -28,6 +27,7 @@ include_once('functions/woo/image_attributes.php');
 include_once('functions/woo/import_product.php');
 include_once('functions/woo/products_vendor.php');
 include_once('functions/woo/woo_cat.php');
+include_once('functions/woo/add_vendor_product_id.php');
 //include_once('functions/woo/woo_seo.php');
 
 include_once('functions/tracking/visitor_detail.php');
@@ -605,3 +605,18 @@ function my_custom_yoast_variable_replacement() {
         'My Custom Variable Description' // Optional description for the variable
     );
 }
+
+
+
+/* 
+
+to delete all seo yoast
+
+UPDATE wp_postmeta 
+SET meta_value = '' 
+WHERE meta_key IN ('_yoast_wpseo_title', '_yoast_wpseo_metadesc') 
+AND post_id IN (SELECT ID FROM wp_posts WHERE post_type = 'product');
+
+
+*/
+
