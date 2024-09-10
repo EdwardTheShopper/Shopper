@@ -42,21 +42,12 @@ function store_info_shortcode_function($atts)
                         </div>
                         <div class="mvx-heading"><?php echo bacola_vendor_name() ?? $vendorNickname; ?></div>
                     </div>
-                    <div class="store-info-toggle">
-                        <div class="mvx-contact-deatil">
-                            <p class="mvx-address"><span><i class="fa-solid fa-map" style="margin-left: 4px"></i></span><?php echo $address1 . ', ' . $address2 . ' ' . $city . ', ' . $country . ', ' . $post_code; ?></p>
-                            <p class="mvx-address"><span><i class="fa-solid fa-phone"></i></i></span> <?php echo $phone; ?></p>
-                            <p class="mvx-address"><i class="fa-regular fa-envelope" style="margin-left: 4px"></i><a href="mailto:<?php echo $vendorEmail;?>" class="mvx_vendor_detail"><?php echo  $vendorEmail; ?></a></p>                    
-                        </div>
-                        <div class="description_data">
-                            <?php echo $venDescription;?>
-                        </div>
-                    </div>
                 </div>
             </div>
-            <span id="toggle-header" class="arrow-toggle">
-                <i class="fa-solid" id='store-info-icon'>i</i>מידע נוסף על החנות<i class='fas fa-angle-down' id="arrow"></i>
-            </span>
+            <?php
+                $location = $address1 . ', ' . $address2 . ' ' . $city . ', ' . $country . ', ' . $post_code;
+                render_store_info_widget($location, $phone, $vendorEmail, $venDescription);
+            ?>
         </div>
     </header>
     <div id="separator-line" style="text-align: center;">
@@ -84,3 +75,72 @@ function store_info_shortcode_function($atts)
 
 // Register the shortcode
 add_shortcode('store_info_shortcode', 'store_info_shortcode_function');
+
+
+function render_store_info_widget($location, $mobile, $email, $description) {
+    $vendor_id = get_vendor_id();
+    $vendor_hide_address = apply_filters('mvx_vendor_store_header_hide_store_address', get_user_meta($vendor_id, '_vendor_hide_address', true), $vendor_id);
+    $vendor_hide_phone = apply_filters('mvx_vendor_store_header_hide_store_phone', get_user_meta($vendor_id, '_vendor_hide_phone', true), $vendor_id);
+    $vendor_hide_email = apply_filters('mvx_vendor_store_header_hide_store_email', get_user_meta($vendor_id, '_vendor_hide_email', true), $vendor_id);
+
+    echo 
+    '<div class="description_data store-info-toggle">' .
+        '<div class="mvx-contact-deatil">';
+    if(!empty($location) && $vendor_hide_address != "Enable") {
+        echo 
+        '<p class="mvx-address">' .
+            '<span><i class="fas fa-map"></i></span>'
+            . esc_html($location) .
+        '</p>';
+    }
+    if(!empty($mobile) && $vendor_hide_phone != "Enable") {
+        echo 
+        '<p class="mvx-address">' .
+            '<span><i class="fas fa-phone"></i></span>'
+            . apply_filters("vendor_shop_page_contact", $mobile, $vendor_id) .
+        '</p>';
+    }
+    if(!empty($email) && $vendor_hide_email != "Enable") {
+        echo
+        '<p class="mvx-address">' .
+            '<a href="mailto:' . apply_filters("vendor_shop_page_email", $email, $vendor_id) . '" class="mvx_vendor_detail">' .
+                '<i class="fas fa-envelope"></i>'
+                . apply_filters("vendor_shop_page_email", $email, $vendor_id) .
+            '</a>' .
+        '</p>';
+    }
+    /* Custom code by Edward Ziadeh */ 
+    $acf_field = get_user_meta($vendor_id);
+    $accessible = unserialize($acf_field["accessible_physically"][0]);
+    $accessible = $accessible[0] ?? 0;
+    $descriptionAccess = ($acf_field["accessible_description"][0]);
+    if($accessible) {
+        echo
+        '<p class="mvx-address">' .
+            '<span><i class="fas fa-wheelchair"></i></span>'
+            . $descriptionAccess .
+        '</p>';
+    }
+    if(apply_filters("is_vendor_add_external_url_field", true, $vendor_id)) {
+        $external_store_url = get_user_meta($vendor_id, "_vendor_external_store_url", true);
+        $external_store_label = get_user_meta($vendor_id, "_vendor_external_store_label", true);
+        if(empty($external_store_label))
+            $external_store_label = __("External Store URL", "multivendorx");
+        if(isset($external_store_url) && !empty($external_store_url)) {
+            echo
+            '<p class="external_store_url">' .
+                '<label>' .
+                    '<a target="_blank" href="' . apply_filters("vendor_shop_page_external_store", esc_url_raw($external_store_url), $vendor_id) . '">'
+                        . esc_html($external_store_label) .
+                    '</a>' .
+                '</label>' .
+            '</p>';
+        }
+    }
+    do_action("mvx_after_vendor_information",$vendor_id);
+    echo 
+    '</div>' . wp_kses_post(htmlspecialchars_decode( wpautop( $description ), ENT_QUOTES )) . '</div>' .
+    '<span id="toggle-header" class="arrow-toggle">' .
+        '<i class="fa-solid" id="store-info-icon">i</i>מידע נוסף על החנות<i class="fas fa-angle-down" id="arrow"></i>' .
+    '</span>';
+}

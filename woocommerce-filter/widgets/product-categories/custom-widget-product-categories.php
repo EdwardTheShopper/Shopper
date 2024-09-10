@@ -1,5 +1,47 @@
 <?php
 
+function recursive_render_categories($instance, $vendor_product_ids, $parent_id) {
+    // get all categories that are associated with the vendor's products (only direct children of $parent_id)
+    $terms = wp_get_object_terms($vendor_product_ids, 'product_cat', array(
+        'hide_empty' => true, // only get categories with products
+        'parent'     => $parent_id,
+    ));
+
+    // filter
+    if($instance['exclude'] != 'all') {
+        $arr = explode(',', $instance['exclude']);
+        $terms = array_filter($terms, function($term) use ($arr) {
+            return !in_array($term->term_id, $arr);
+        });
+    }
+    if($terms) {
+        $base_url = get_option('baseUrl');
+        $full_url = substr($base_url, 0, strlen($base_url)-1) . get_vendor_slug(get_vendor_id());
+
+        echo '<ul' . ($parent_id? ' class="children" ' : '') . '>';
+        foreach($terms as $term) {
+            // constract link:
+            $category_string = bacola_get_cat_url($term->term_id);
+            $position = strpos($category_string, '?');
+            $category_string = $position !== false ? // '?' symbol was found ?
+                substr($category_string, $position): ''; // adding category : removing category
+            //////////////////
+            $checkbox = isset($_GET['filter_cat']) && in_array($term->term_id, explode(',', $_GET['filter_cat'])) ? 'checked' : '';
+
+            echo '<li>
+                    <a href="' . esc_url($full_url . $category_string) . '" class="product_cat">
+                        <input name="product_cat[]" value="' . esc_attr($term->term_id) . '" id="' . esc_attr($term->name) . '" type="checkbox" ' . esc_attr($checkbox) . '>
+                        <label ><span></span>' . esc_html($term->name) . '</label>
+                    </a>'
+            ;
+
+            recursive_render_categories($instance, $vendor_product_ids, $term->term_id);
+            echo '</li>';
+        }
+        echo '</ul>';
+    }
+}
+
 class Custom_Widget_Product_Categories extends WP_Widget { 
 
     // Widget Settings
@@ -11,166 +53,20 @@ class Custom_Widget_Product_Categories extends WP_Widget {
 
     // Widget Output
     function widget($args, $instance) {
-        if(is_product_category()){
-            $term_children = get_term_children( get_queried_object()->term_id, 'product_cat' );
-
-            if($term_children){
-                extract($args);
-                $title = apply_filters( 'widget_title', empty($instance['title']) ? '' : $instance['title'], $instance );
-                $exclude = $instance['exclude'];
-
-                echo $before_widget;
-
-                if($title) {
-                    echo $before_title . $title . $after_title;
-                }
-
-                echo '<div class="widget-body site-checkbox-lists ">';
-                echo '<div class="site-scroll">';
-                echo '<ul>';
-                foreach($term_children as $child){
-                    $childterm = get_term_by( 'id', $child, 'product_cat' );
-
-                    echo '<li>';
-                    echo '<a href="'.esc_url(get_term_link( $childterm->slug, 'product_cat' )).'">';
-                    echo '<input name="product_cat[]" value="'.esc_attr($childterm->term_id).'" id="'.esc_attr($childterm->name).'" type="checkbox" >';
-                    echo '<label><span></span>'.esc_html($childterm->name).'</label>';
-                    echo '</a>';
-                    echo '<li>';
-                }
-                echo '</ul>';
-                echo '</div>';
-                echo '</div>';
-
-                echo $after_widget;
-            }
-        }
-
-        if(!is_product_category()){
-			
-            extract($args);
-            $title = apply_filters( 'widget_title', empty($instance['title']) ? '' : $instance['title'], $instance );
-            $exclude = $instance['exclude'];
-            $vendor_id = get_post_field('post_author');
-
-            $vendor = get_mvx_vendor($vendor_id);
-
-            $vendor_products = $vendor->get_products();
-
-            echo $before_widget;
-
-            if($title) {
-                echo $before_title . $title . $after_title;
-            }
-
-            $vendor_product_ids = wp_list_pluck($vendor_products, 'ID');
-
-            // Get categories for the vendor's products
-            $terms = wp_get_object_terms($vendor_product_ids, 'product_cat', array(
-                'hide_empty' => true, // Only get categories with products
-                'parent'     => 0,
-            ));
-
-            if($exclude != 'all'){
-                $str = $exclude;
-                $arr = explode(',', $str);
-                $terms = array_filter($terms, function($term) use ($arr) {
-                    return !in_array($term->term_id, $arr);
-                });
-            }
-
-            echo '<div class="widget-body site-checkbox-lists ">';
-            echo '<div class="site-scroll">';
-            echo '<ul>';
-
-            foreach ($terms as $term) {
-                $term_children = get_terms(array(
-                    'taxonomy'   => 'product_cat',
-                    'child_of'   => $term->term_id,
-                    'hide_empty' => true, // Only get categories with products
-                ));
-                $checkbox = '';
-                if (isset($_GET['filter_cat'])) {
-                    if (in_array($term->term_id, explode(',', $_GET['filter_cat']))) {
-                        $checkbox = 'checked';
-                    }
-                }
-
-                echo '<li>';
-                echo '<a href="' . esc_url(bacola_get_cat_url($term->term_id)) . '" class="product_cat">';
-                echo '<input name="product_cat[]" value="' . esc_attr($term->term_id) . '" id="' . esc_attr($term->name) . '" type="checkbox" ' . esc_attr($checkbox) . '>';
-                echo '<label ><span></span>' . esc_html($term->name) . '</label>';
-                echo '</a>';
-                if ($term_children) {
-                    echo '<ul class="children">';
-
-                    foreach ($term_children as $child) {
-                        $childterm = get_term_by('name', $child->name, 'product_cat');
-                        $ancestor = get_ancestors($childterm->term_id, 'product_cat');
-
-                        $term_third_children = get_terms(array(
-                            'taxonomy'   => 'product_cat',
-                            'child_of'   => $childterm->term_id,
-                            'hide_empty' => true, // Only get categories with products
-                        ));
-
-                        $childcheckbox = '';
-                        if (isset($_GET['filter_cat'])) {
-                            if (in_array($childterm->term_id, explode(',', $_GET['filter_cat']))) {
-                                $childcheckbox .= 'checked';
-                            }
-                        }
-
-                        if ($childterm->parent && (sizeof($term_third_children) > 0)) {
-                            echo '<li>';
-                            echo '<a href="' . esc_url(bacola_get_cat_url($childterm->term_id)) . '">';
-                            echo '<input name="product_cat[]" value="' . esc_attr($childterm->term_id) . '" id="' . esc_attr($childterm->name) . '" type="checkbox" ' . esc_attr($childcheckbox) . '>';
-                            echo '<label><span></span>' . esc_html($childterm->name) . '</label>';
-                            echo '</a>';
-                            if ($term_third_children) {
-                                echo '<ul class="children">';
-                                foreach ($term_third_children as $third_child) {
-                                    $thirdchildterm = get_term_by('name', $third_child->name, 'product_cat');
-                                    $thirdchildthumbnail_id = get_term_meta($thirdchildterm->term_id, 'thumbnail_id', true);
-                                    $thirdchildimage = wp_get_attachment_url($thirdchildthumbnail_id);
-
-                                    $thirdchildcheckbox = '';
-                                    if (isset($_GET['filter_cat'])) {
-                                        if (in_array($thirdchildterm->term_id, explode(',', $_GET['filter_cat']))) {
-                                            $thirdchildcheckbox .= 'checked';
-                                        }
-                                    }
-
-                                    echo '<li>';
-                                    echo '<a href="' . esc_url(bacola_get_cat_url($thirdchildterm->term_id)) . '">';
-                                    echo '<input name="product_cat[]" value="' . esc_attr($thirdchildterm->term_id) . '" id="' . esc_attr($thirdchildterm->name) . '" type="checkbox" ' . esc_attr($thirdchildcheckbox) . '>';
-                                    echo '<label><span></span>' . esc_html($thirdchildterm->name) . '</label>';
-                                    echo '</a>';
-                                    echo '</li>';
-                                }
-                                echo '</ul>';
-                            }
-
-                            echo '</li>';
-                        } elseif (sizeof($ancestor) == 1) {
-                            echo '<li>';
-                            echo '<a href="' . esc_url(bacola_get_cat_url($childterm->term_id)) . '">';
-                            echo '<input name="product_cat[]" value="' . esc_attr($childterm->term_id) . '" id="' . esc_attr($childterm->name) . '" type="checkbox" ' . esc_attr($childcheckbox) . '>';
-                            echo '<label><span></span>' . esc_html($childterm->name) . '</label>';
-                            echo '</a>';
-                            echo '</li>';
-                        }
-                    }
-                    echo '</ul>';
-                }
-                echo '</li>';
-            }
-            echo '</ul>';
-            echo '</div>';
-            echo '</div>';
-
-            echo $after_widget;
-        }
+        extract($args);
+        $vendor = get_mvx_vendor(get_vendor_id());
+        $vendor_product_ids = wp_list_pluck($vendor->get_products(), 'ID');
+    
+        echo $before_widget;
+        echo $before_title . apply_filters('widget_title', empty($instance['title']) ? '' : $instance['title'], $instance) . $after_title;
+    
+        echo '<div class="widget-body site-checkbox-lists ">';
+        echo '<div class="site-scroll">';
+    
+        recursive_render_categories($instance, $vendor_product_ids, 0);
+    
+        echo '</div></div>';
+        echo $after_widget;
     }
 
     // Update
@@ -202,9 +98,3 @@ class Custom_Widget_Product_Categories extends WP_Widget {
         <?php
     }
 }
-
-// Add Widget
-function custom_widget_product_categories_init() {
-    register_widget('Custom_Widget_Product_Categories');
-}
-add_action('widgets_init', 'custom_widget_product_categories_init');

@@ -67,29 +67,6 @@
 body > .site-canvas {
     display: none;
 }
-/* adjustments for the custom canvas links (at the bottom of the menu) */
-#insert_canvas_links_here .site-canvas { /* wrapper */
-	position: relative;
-	width: 100% !important;
-	right: 340px;
-}
-#insert_canvas_links_here .canvas-menu { /* list */
-	border-top: 1px solid var(--color-border);
-	border-bottom: 1px solid var(--color-border);
-}
-#insert_canvas_links_here .canvas-menu a { /* single item (inner link) */
-	padding-right: 1.25rem !important;
-	margin-top: 5px !important;
-	margin-bottom: 5px !important;
-}
-@media screen and (max-width: 419px) { /* adjustment for very small screens */
-    .site-sidebar {
-        width: 100%;
-    }
-	#insert_canvas_links_here .site-canvas {
-		right: 320px;
-	}	
-}
 
 /* set full height through all menu elements */
 .site-sidebar .sidebar-inner,
@@ -196,10 +173,8 @@ body > .site-canvas {
 	display: flex;
 	align-items: center;
 	margin-top: 1rem;
-}
-/* unset margin of store-info description - only on store page */
-.vendor-store #toggle-header {
-	margin-top: 0 !important;
+	font-size: 1rem;
+	font-family: var(--font-primary);
 }
 
 /* fix overlapping on mobile view */
@@ -230,10 +205,35 @@ body > .site-canvas {
 #btn-getInTouch {
 	display: none;
 }
-/* lift up whatsapp widget */
+/* whatsapp widget */
 .whatsapp-live-widget {
-	margin-bottom: 2.5rem;
 	z-index: 99 !important; /* make sure is doesn't cover the search widget */
+	margin-bottom: 2.5rem; /* lift up */
+	/*move to the other side */
+	left: 20px;
+	right: unset !important;
+}
+
+/* additional lifting of whatsapp widget */
+@media only screen and (max-width: 837px) {
+    body.archive .whatsapp-live-widget {
+	    margin-bottom: 3.6rem !important;
+    }
+}
+@media only screen and (max-width: 768px) {
+    body.archive .whatsapp-live-widget {
+	    margin-bottom: 7.6rem !important;
+    }
+}
+@media only screen and (max-width: 617px) {
+    body.archive .whatsapp-live-widget {
+	    margin-bottom: 9.1rem !important;
+    }
+}
+@media only screen and (max-width: 345px) {
+    body.archive .whatsapp-live-widget {
+	    margin-bottom: 10.7rem !important;
+    }
 }
 
 /* hide message at the end of products list */

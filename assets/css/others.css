@@ -1,3 +1,70 @@
+/**************************************************************************/
+
+html {
+    margin-top: 0 !important;
+}
+
+/* hide irrelevant elements including header and parts of footer */
+.home > div, .home #masthead, .home footer nav {
+    display: none !important;
+}
+/* more adjustments for footer */
+.home .site-footer {
+    margin-top: 0;
+    margin-bottom: 0 !important;
+    height: 40px;
+}
+.home .site-footer .footer-bottom,
+.home .site-footer .footer-bottom .container,
+.home .site-footer .footer-bottom .container .site-copyright {
+    height: inherit;
+}
+.home .site-footer .footer-bottom .container {
+    margin: 0;
+    max-width: 100%;
+    padding: 0 !important;
+    justify-content: center !important;
+}
+.home .site-footer .footer-bottom .container .site-copyright {
+    display: flex;
+    align-items: center;
+}
+/* more adjustments for main content */
+.home #main {
+    width: 100% !important;
+    height: 93vh !important;
+    right: 0;
+    left: 0;
+}
+.home #main .site-content,
+.home #main .site-content .homepage-content,
+.home #main .site-content .homepage-content .elementor-50,
+.home #main .site-content .homepage-content .elementor-50 div,
+.home #main .site-content .homepage-content .elementor-50 section,
+.home #main .site-content .homepage-content .elementor-50 iframe {
+    height: 93vh !important;
+    width: inherit !important;
+    max-width: 100% !important;
+    right: 0;
+    left: 0;
+}
+
+/* remove side margins */
+.home #main .site-content .homepage-content .elementor-50 .elementor-element-5a99381 > .elementor-container {
+    margin: 0;
+}
+
+/* set screen size in order to disable background scrolling */
+.home #main.site-primary {
+    margin-top: 0;
+}
+
+
+/**************************************************************************/
+
+
+
+
 /* main page - products on carousel */
 .products .slick-track {
     display: flex !important;

@@ -204,6 +204,11 @@
 .site-footer .footer-widgets {
     display: none;
 }
+/* minimize height and maximize width */
+.site-footer .container {
+    padding: 1rem !important;
+	max-width: 100%;
+}
 
 /* arrow icons (store-info, single product's description and policies) */
 .arrow-toggle #arrow , .description-arrow-toggle #arrow, .policy-arrow-toggle #arrow {
@@ -218,9 +223,12 @@
 
 
 /* make sure the footer doesn't cover any content */
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 768px) {
+    .site-footer {
+        margin-bottom: 4rem;
+    } 
 	.site-footer .border-enable .container .footer-menu {
-		margin-bottom: 3rem;
+		margin-top: 0 !important;
 		display: flex;
 		justify-content: end;
 	}
@@ -228,4 +236,3 @@
 		justify-content: start;
 	}
 }
-

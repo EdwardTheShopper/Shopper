@@ -67,22 +67,6 @@ if ( $template_class == 'template3') { ?>
                     <?php } ?>
                 </div>
             </div>
-            <script>
-                jQuery(document).ready(function() {
-                    jQuery('#toggle-header').click(function() {
-                        var $storeInfo = jQuery('.store-info-toggle');
-
-                        // open / close panel
-                        jQuery('.arrow-toggle').toggleClass('expanded');
-                        $storeInfo.animate(
-                            { height: $storeInfo.height() === 0  ? $storeInfo[0].scrollHeight : 0 }
-                        , 300);
-
-                        // flip arrow
-                        jQuery('#toggle-header #arrow').toggleClass('fa-angle-up fa-angle-down');
-                    });
-                });
-            </script>
             <div class="mvx_vendor_rating">
                 <?php
                 if (mvx_is_module_active('store-review') && get_mvx_vendor_settings('is_sellerreview', 'review_management')) {
@@ -95,43 +79,25 @@ if ( $template_class == 'template3') { ?>
                 ?>
             </div>
         </div>
-        <?php if (!$vendor_hide_description && !empty($description)) { ?>                
-            <div class="description_data store-info-toggle">
-                <div class="mvx-contact-deatil">
-                    <?php if (!empty($location) && $vendor_hide_address != 'Enable') { ?><p class="mvx-address"><span><i class="mvx-font ico-location-icon"></i></span><?php echo esc_html($location); ?></p><?php } ?>
-                    <?php if (!empty($mobile) && $vendor_hide_phone != 'Enable') { ?><p class="mvx-address"><span><i class="mvx-font ico-call-icon"></i></span><?php echo apply_filters('vendor_shop_page_contact', $mobile, $vendor_id); ?></p><?php } ?>
-                    <?php if (!empty($email) && $vendor_hide_email != 'Enable') { ?>
-                    <p class="mvx-address"><a href="mailto:<?php echo apply_filters('vendor_shop_page_email', $email, $vendor_id); ?>" class="mvx_vendor_detail"><i class="mvx-font ico-mail-icon"></i><?php echo apply_filters('vendor_shop_page_email', $email, $vendor_id); ?></a></p><?php } ?>
-                    <?php
+        <?php if (!$vendor_hide_description && !empty($description)) {
+            render_store_info_widget($location, $mobile, $email, $description);
+        } ?>
+        <script>
+            jQuery(document).ready(function() {
+                jQuery('#toggle-header').click(function() {
+                    var $storeInfo = jQuery('.store-info-toggle');
 
-                    /* Custom code by Edward Ziadeh */ 
-                    $acf_field = get_user_meta($vendor_id);
-                    $accessible = unserialize($acf_field['accessible_physically'][0]);
-                    $accessible = $accessible[0] ?? 0;
-                    $descriptionAccess = ($acf_field['accessible_description'][0]);
-                    if($accessible){ ?>
-                        <p class="mvx-address"><span><i class="fas fa-wheelchair"></i></span><?php echo $descriptionAccess; ?></p>
-                    <?php } ?>
+                    // open / close panel
+                    jQuery('.arrow-toggle').toggleClass('expanded');
+                    $storeInfo.animate(
+                        { height: $storeInfo.height() === 0  ? $storeInfo[0].scrollHeight : 0 }
+                    , 300);
 
-                    <?php
-                    if (apply_filters('is_vendor_add_external_url_field', true, $vendor->id)) {
-                        $external_store_url = get_user_meta($vendor_id, '_vendor_external_store_url', true);
-                        $external_store_label = get_user_meta($vendor_id, '_vendor_external_store_label', true);
-                        if (empty($external_store_label))
-                            $external_store_label = __('External Store URL', 'multivendorx');
-                        if (isset($external_store_url) && !empty($external_store_url)) {
-                            ?><p class="external_store_url"><label><a target="_blank" href="<?php echo apply_filters('vendor_shop_page_external_store', esc_url_raw($external_store_url), $vendor_id); ?>"><?php echo esc_html($external_store_label); ?></a></label></p><?php
-                            }
-                        }
-                        ?>
-                    <?php do_action('mvx_after_vendor_information',$vendor_id);?>   
-                </div>
-                <?php echo wp_kses_post(htmlspecialchars_decode( wpautop( $description ), ENT_QUOTES )); ?>
-            </div>
-            <span id="toggle-header" class="arrow-toggle">
-                <i class="fa-solid" id='store-info-icon'>i</i>מידע נוסף על החנות<i class='fas fa-angle-down' id="arrow"></i>
-            </span>
-        <?php } ?>
+                    // flip arrow
+                    jQuery('#toggle-header #arrow').toggleClass('fa-angle-up fa-angle-down');
+                });
+            });
+        </script>
     </div>
 </div>
 <?php } elseif ( $template_class == 'template1' ) {
@@ -174,9 +140,9 @@ if ( $template_class == 'template3') { ?>
                             $external_store_label = __('External Store URL', 'multivendorx');
                         if (isset($external_store_url) && !empty($external_store_url)) {
                             ?><p class="external_store_url"><label><a target="_blank" href="<?php echo esc_attr(apply_filters('vendor_shop_page_external_store', esc_url_raw($external_store_url), $vendor_id)); ?>"><?php echo esc_html($external_store_label); ?></a></label></p><?php
-                            }
                         }
-                        ?>
+                    }
+                    ?>
                     <?php do_action('mvx_after_vendor_information',$vendor_id);?>   
                 </div>
             </div>

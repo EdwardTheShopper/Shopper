@@ -10,11 +10,6 @@ add_filter('dgwt/wcas/scripts/custom_params', function ($params) {
     global $post;
     $vendor_id = get_vendor_id();
 
-/* TESTING */
-/**/    setcookie('TEST_DEBUG_vendorId_from_cookie', $_COOKIE['vendorId'] ?? false, time() + (86400 * 30), "/");
-/**/    setcookie('TEST_DEBUG_vendorId_from_function', get_vendor_id(), time() + (86400 * 30), "/");
-/* END OF TESTING */
-
     if($vendor_id) {
         global $set_global_vendor_id;
         $set_global_vendor_id = $vendor_id;

@@ -8,7 +8,28 @@
  */
 ?>
 			</div><!-- homepage-content -->
-		</div><!-- site-content -->
+		</div><!-- site-content -->    
+  <!-- global sidebar -->
+  <div id="sidebar" class="col-12 col-md-3 col-lg-3 content-secondary site-sidebar">
+        <div class="site-scroll">
+            <div class="sidebar-inner">
+                <div class="sidebar-mobile-header">
+                    <!-- <h3 class="entry-title"><?php # esc_html_e('               '/*'Filter Products'*/, 'bacola'); ?></h3> -->
+                    <!-- <button id="show_products" type="primary">הצג מוצרים</button> -->
+                    <a href="<?php echo get_vendor_slug(get_vendor_id()); ?>">
+                        <button id="reset_filters" type="primary">איפוס בחירה</button>
+                    </a>
+                    <div class="close-sidebar">
+                        <i class="klbth-icon-x"></i>
+                    </div>
+                </div>
+                <?php
+                if(is_active_sidebar('shop-sidebar'))
+                    dynamic_sidebar('shop-sidebar');
+                ?>
+            </div>
+        </div>
+    </div>
 	</main><!-- site-primary -->
 
 	<?php bacola_do_action('bacola_before_main_footer'); ?>

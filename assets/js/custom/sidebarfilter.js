@@ -78,16 +78,5 @@
 		$('.site-sidebar .widget_price_filter .price_label').html(function(_, html) {
         	return html.replace('מחיר: ', '');
     	});
-
-        // add links from the default menu at the bottom of this custom menu (emulate the same structure)
-        $('#insert_canvas_links_here').html(`
-            <div class="site-canvas">
-                <nav class="canvas-menu">
-                    <ul class="menu">
-                        ${$('.site-canvas .canvas-menu .menu').html()}
-                    </ul>
-                </nav>
-            </div>
-        `);
     });
 })(jQuery);

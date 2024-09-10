@@ -9,10 +9,7 @@ function add_popup_script() {
     /* NOTE: the popup shouldn't appear on "general" pages, therefore, do not use the function "get_vendor_id()" */
     $vendor_id = mvx_find_shop_page_vendor();
     if(!$vendor_id) // double check
-    {
-        setcookie('TEST_DEBUG_POPUP_SCRIPT_CANT_FIND_vendorId_MVX', true);
         return;
-    }
     
     set_vendor_cookie($vendor_id); // used by fibosearch
 
