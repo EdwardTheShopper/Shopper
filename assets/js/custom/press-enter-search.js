@@ -1,5 +1,5 @@
-jQuery(document).ready(function($) {
-    $('.dgwt-wcas-search-form').on('submit', function(e) {
+jQuery(document).ready(function ($) {
+    $('.dgwt-wcas-search-form').on('submit', function (e) {
         e.preventDefault();
         var searchQuery = $(this).find('.dgwt-wcas-sf-wrapp input[type="search"]').val();
         var currentUrl = window.location.pathname;
@@ -17,9 +17,11 @@ jQuery(document).ready(function($) {
     });
 
     // do the same for the search widget in the sidebar
-    $('.widget_product_search .search-form').on('submit', function(e) {
+    $('.widget_product_search .search-form').on('submit', function (e) {
         e.preventDefault();
-        var searchQuery = $(this).find('.widget_product_search .search-form input[type="search"]').val();
+
+        // Corrected selector to capture the search query value
+        var searchQuery = $(this).find('input[type="search"]').val();
         var currentUrl = window.location.pathname;
 
         // Extract the dynamic part of the URL, assuming it is after /store/
@@ -33,4 +35,5 @@ jQuery(document).ready(function($) {
             window.location.href = newAction;
         }
     });
+
 });

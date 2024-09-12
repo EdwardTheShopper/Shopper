@@ -30,6 +30,8 @@ include_once('functions/woo/products_vendor.php');
 include_once('functions/woo/add_vendor_product_id.php');
 include_once('functions/woo/woo_cat.php');
 //include_once('functions/woo/woo_seo.php');
+include_once('functions/seo/new_variables.php');
+
 
 include_once('functions/tracking/visitor_detail.php');
 include_once('functions/tracking/mixpanel_head.php'); // only use in production
@@ -328,6 +330,39 @@ function ab_no_products_found()
     // echo do_shortcode('[elementor-template id="3129"]');
     // echo do_shortcode('[elementor-template id="111111111124516"]');
 }
+// create a new file for this function
+function custom_redirect_for_nonexistent_products() {
+    // Check if we are on a product page
+
+    if ( !is_singular( 'product' ) ) {
+        global $post;
+
+        // If the product doesn't exist or is not published
+        if ( ! $post || get_post_status( $post->ID ) != 'publish' ) {
+
+            // Debug line to check if the condition is hit
+            error_log('Redirecting due to non-existent product');
+
+            // Redirect code
+            global $wp;
+            $current_url = home_url( $wp->request );
+            $parsed_url = wp_parse_url( $current_url );
+            $path_parts = explode( '/', $parsed_url['path'] );
+
+            if ( isset( $path_parts[1] ) && $path_parts[1] === 'store' ) {
+                wp_redirect( home_url( "/store/" . $path_parts[2] ), 301 );
+                exit;
+            }
+        }
+    }
+}
+add_action( 'template_redirect', 'custom_redirect_for_nonexistent_products', 1 );
+
+
+
+
+
+
 
 add_filter('comment_post_redirect', 'redirect_after_comment');
 function redirect_after_comment($location)
@@ -578,32 +613,3 @@ function unregister_klb_product_categories_widget() {
     register_widget('Custom_Widget_Product_Categories');
 }
 add_action('widgets_init', 'unregister_klb_product_categories_widget', 11);
-
-
-
-
-/**
- * By: Edward Ziadeh
- * To add new variable inside yoast
- * Date: Sep 4, 2024
- */
-function my_custom_yoast_variable() {
-    return 'edward the king';
-    // Example: Retrieving a custom field from a post, you can customize this as needed
-    $custom_value = get_post_meta(get_the_ID(), 'custom_field_key', true);
-    
-    // Return the value you want to display in Yoast SEO fields
-    return $custom_value ? $custom_value : 'Default Value';
-}
-
-// Step 2: Register the custom variable in Yoast SEO
-add_action('wpseo_register_extra_replacements', 'my_custom_yoast_variable_replacement');
-
-function my_custom_yoast_variable_replacement() {
-    wpseo_register_var_replacement(
-        '%%edward%%',  // This is the placeholder that will be used in Yoast settings
-        'my_custom_yoast_variable', // Callback function to retrieve the value
-        'advanced', // Usage context (use 'advanced' for custom variables)
-        'My Custom Variable Description' // Optional description for the variable
-    );
-}
