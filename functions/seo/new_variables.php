@@ -3,6 +3,7 @@
  * By: Edward Ziadeh
  * To add new variable inside yoast
  * Date: Sep 4, 2024
+ * Store Location, 
  */
 function my_custom_yoast_variable() {
     return 'edward the king';
@@ -24,3 +25,4 @@ function my_custom_yoast_variable_replacement() {
         'My Custom Variable Description' // Optional description for the variable
     );
 }
+

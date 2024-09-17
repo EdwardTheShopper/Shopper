@@ -289,6 +289,7 @@ $featured_image_url = wp_get_attachment_url($featured_image_id);
     "@type": "Brand",
     "name": "<?php echo $brand; ?>"
   },
+  
   "offers": {
     "@type": "Offer",
     "priceCurrency": "ILS",
@@ -324,8 +325,13 @@ $featured_image_url = wp_get_attachment_url($featured_image_id);
 </script>
 
 
+
+
+
+
 <?php
 function define_collapsible_description($description) {
+    
     $cutoff = 250;
 
     if(strlen($description) <= $cutoff) // content is short enough

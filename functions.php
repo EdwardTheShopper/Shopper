@@ -32,6 +32,7 @@ include_once('functions/woo/woo_cat.php');
 //include_once('functions/woo/woo_seo.php');
 include_once('functions/seo/new_variables.php');
 include_once('functions/seo/nonexistent_product.php');
+include_once('functions/seo/custom_modify_yoast_breadcrumbs.php');
 
 
 include_once('functions/tracking/visitor_detail.php');
