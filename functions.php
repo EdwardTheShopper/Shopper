@@ -31,6 +31,7 @@ include_once('functions/woo/add_vendor_product_id.php');
 include_once('functions/woo/woo_cat.php');
 //include_once('functions/woo/woo_seo.php');
 include_once('functions/seo/new_variables.php');
+include_once('functions/seo/nonexistent_product.php');
 
 
 include_once('functions/tracking/visitor_detail.php');
@@ -330,39 +331,6 @@ function ab_no_products_found()
     // echo do_shortcode('[elementor-template id="3129"]');
     // echo do_shortcode('[elementor-template id="111111111124516"]');
 }
-// create a new file for this function
-function custom_redirect_for_nonexistent_products() {
-    // Check if we are on a product page
-
-    if ( !is_singular( 'product' ) ) {
-        global $post;
-
-        // If the product doesn't exist or is not published
-        if ( ! $post || get_post_status( $post->ID ) != 'publish' ) {
-
-            // Debug line to check if the condition is hit
-            error_log('Redirecting due to non-existent product');
-
-            // Redirect code
-            global $wp;
-            $current_url = home_url( $wp->request );
-            $parsed_url = wp_parse_url( $current_url );
-            $path_parts = explode( '/', $parsed_url['path'] );
-
-            if ( isset( $path_parts[1] ) && $path_parts[1] === 'store' ) {
-                wp_redirect( home_url( "/store/" . $path_parts[2] ), 301 );
-                exit;
-            }
-        }
-    }
-}
-add_action( 'template_redirect', 'custom_redirect_for_nonexistent_products', 1 );
-
-
-
-
-
-
 
 add_filter('comment_post_redirect', 'redirect_after_comment');
 function redirect_after_comment($location)

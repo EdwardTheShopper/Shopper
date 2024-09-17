@@ -24,16 +24,3 @@ function my_custom_yoast_variable_replacement() {
         'My Custom Variable Description' // Optional description for the variable
     );
 }
-
-
-/* 
-
-to delete all seo yoast
-
-UPDATE nqq_postmeta 
-SET meta_value = '' 
-WHERE meta_key IN ('_yoast_wpseo_title', '_yoast_wpseo_metadesc') 
-AND post_id IN (SELECT ID FROM nqq_posts WHERE post_type = 'product');
-
-
-*/
